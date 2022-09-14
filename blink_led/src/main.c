@@ -6,7 +6,7 @@
  */
 
 
-#include "stm8s.h"
+#include <stm8s.h>
 
 #define LED_GPIO_PORT  (GPIOC)
 #define LED_GPIO_PINS  (GPIO_PIN_5)
