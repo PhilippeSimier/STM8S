@@ -6,7 +6,7 @@ Cette carte est compatible au niveau des broches avec l' arduino nano. **Attenti
 
 La carte posséde un bus SPI, un bus I2C, 6 entrées analogiques, une liaison série et des broches GPIO.
 
-![DEV KIT V1 30 pins](/brochage NUCLEO-8S207K8.png)
+![brochage NUCLEO-8S207K8](/brochage_NUCLEO-8S207K8.png)
 
 ## Configuration de platformIO
 
