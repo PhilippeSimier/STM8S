@@ -47,7 +47,8 @@ void main() {
 ```
 
 ## Compilation
-`Processing nucleo_8s207k8 (platform: ststm8; board: nucleo_8s207k8; framework: spl)
+```
+Processing nucleo_8s207k8 (platform: ststm8; board: nucleo_8s207k8; framework: spl)
 
 Verbose mode can be enabled via `-v, --verbose` option
 CONFIGURATION: https://docs.platformio.org/page/boards/ststm8/nucleo_8s207k8.html
@@ -82,7 +83,6 @@ Bytes written: 582
 ================================================================== [SUCCESS] Took 1.09 seconds ==================================================================
 
 RUN FINISHED; exit value 0; real time: 1s; user: 120ms; system: 700ms
-``
 
 ```
 
