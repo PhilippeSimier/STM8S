@@ -1,10 +1,12 @@
 ﻿# STM8
 
 ## Introduction
-Vous trouverez des programmes en C à titre d'exemple  pour utiliser la carte STM8S207.
-La carte est compatible au niveau des broches avec l' arduino nano. **Attention cela ne veut pas dire que vous pouvez utiliser le framwork Arduino.** 
+A titre d'exemple, Vous trouverez dans ce dépot, des programmes en langage C pour utiliser la carte STM8S207.
+Cette carte est compatible au niveau des broches avec l' arduino nano. **Attention cela ne veut pas dire que vous pouvez utiliser le framwork Arduino.** 
 
 La carte posséde un bus SPI, un bus I2C, 6 entrées analogiques, une liaison série et des broches GPIO.
+
+![DEV KIT V1 30 pins](/brochage NUCLEO-8S207K8.png)
 
 ## Configuration de platformIO
 
@@ -47,6 +49,7 @@ void main() {
 ```
 
 ## Compilation
+Résultat de la compilation :
 ```
 Processing nucleo_8s207k8 (platform: ststm8; board: nucleo_8s207k8; framework: spl)
 
