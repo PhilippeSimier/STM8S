@@ -2,6 +2,8 @@
 <configurationDescriptor version="100">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <df root="." name="0">
+      <df name="include">
+      </df>
       <df name="lib">
       </df>
       <df name="src">
@@ -9,6 +11,8 @@
         <in>stm8s_conf.h</in>
         <in>stm8s_it.c</in>
         <in>stm8s_it.h</in>
+      </df>
+      <df name="test">
       </df>
     </df>
   </logicalFolder>
