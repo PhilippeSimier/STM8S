@@ -5,7 +5,6 @@
  * @brief   Blink led builtin.
  */
 
-
 #include <stm8s_conf.h>
 
 #define LED_GPIO_PORT  GPIOC
@@ -19,7 +18,6 @@ void main() {
     /* Setup  Initialize GPIO */
     GPIO_Init(LED_GPIO_PORT,  LED_GPIO_PIN, GPIO_MODE_OUT_PP_LOW_FAST);
  
-
     /* Loop */
     while (1) {
 
@@ -28,14 +26,13 @@ void main() {
         GPIO_WriteLow(LED_GPIO_PORT,   LED_GPIO_PIN);
         Delay(10);
     }
-
 }
 
 void Delay(uint16_t nCount) {
     uint16_t n = 0xFFFF;
-    while (nCount != 0) {
+    while (nCount) {
         n = 0xFFFF;
-        while (n != 0){
+        while (n){
             n--;
         }
         nCount--;
