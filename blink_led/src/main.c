@@ -48,7 +48,9 @@ void Delay(uint16_t nCount) {
 */ 
 
 void assert_failed(uint8_t* file, uint32_t line) {
-  
+    
+    uint32_t l = line;
+    uint8_t* f = file;
     // Infinite loop 
     while (1) {
     }
