@@ -1,12 +1,53 @@
-﻿# STM8
+﻿# STM8S
 
 ## Introduction
+
+![Gamme STM8S20](/gamme_STM8S20.png)
+
 A titre d'exemple, Vous trouverez dans ce dépot, des programmes en langage C pour utiliser la carte STM8S207.
 Cette carte est compatible au niveau des broches avec l' arduino nano. **Attention cela ne veut pas dire que vous pouvez utiliser le framwork Arduino.** 
 
 La carte posséde un bus SPI, un bus I2C, 6 entrées analogiques, une liaison série et des broches GPIO.
 
 ![brochage NUCLEO-8S207K8](/brochage_NUCLEO-8S207K8.png)
+
+Côté gauche
+|Pin name| STM8 pin | Function|
+|--|--|--|
+| D1|  PD5|  UART3_TX  |  
+| D0|  PD6|  UART_RX |
+| RESET | NRST | RESET |
+| GND  | - | Ground |
+| D2 | PD0 | TIM3_CH2 |
+| D3 | PC1 | TIM1_CH1 |
+| D4 | PD2 | TIM3_CH1 |
+| D5 | PC2 | TIM1_CH2 |
+| D6 | PC3 | TIM1_CH3 |
+| D7 | PA1 | - |
+| D8 | PA2 | - |
+| D9 | PC4 | TIM1_CH4 |
+| D10 | PE5 / PD4 | SPI_NSS / TIM2_CH1 |
+| D11 | PC6 / PD3 | SPI_MOSI / TIM2_CH2 |
+| D12 | PC7 | SPI_MISO |
+
+Côté droit
+|Pin name| STM8 pin | Function|
+|--|--|--|
+| VIN |  - | Power input |
+| GND | - | Ground |
+| RESET | NRST | RESET |
+| +5V | - | - |
+| A7 | PD7 - PF4 | TLI - Analog input 12 |
+| A6 | PF4 - PD7 |  Analog input 12 - TLI |
+| A5 | PB4 | Analog input 4 - I2C_SC |
+| A4 | PB5 | Analog input 5 - I2C_SDA |
+| A3 | PB3 | Analog input 3 |
+| A2 | PB2 | Analog input 2 |
+| A1 | PB1 | Analog input 1 |
+| A0 | PB0 | Analog input 0 |
+| AREF | - | VDDA |
+| +3V3 | - | 3.3 V I/O |
+| D13 | PC5 | SPI clock |
 
 ## Configuration de platformIO
 
