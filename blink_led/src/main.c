@@ -7,23 +7,27 @@
 
 #include <stm8s_conf.h>
 
-#define LED_GPIO_PORT  GPIOC
-#define LED_GPIO_PIN   (GPIO_Pin_TypeDef)GPIO_PIN_5
+#define PORTC  GPIOC
+#define LED_BUILTIN    GPIO_PIN_5
+#define LED_ROUGE      GPIO_PIN_7
 
 // Prototypes
 void Delay(uint16_t nCount);
 
 void main() {
 
-    /* Setup  Initialize GPIO */
-    GPIO_Init(LED_GPIO_PORT, LED_GPIO_PIN, GPIO_MODE_OUT_PP_LOW_FAST);
-
-    /* Loop */
+    // Setup  Initialize broches PC5 & PC7 
+    GPIO_Init(PORTC, LED_BUILTIN, GPIO_MODE_OUT_PP_LOW_FAST); // Output push-pull, low level, 10MHz
+    GPIO_Init(PORTC, LED_ROUGE,   GPIO_MODE_OUT_PP_LOW_SLOW); // Output push-pull, low level, 2MHz
+    
+    // Loop 
     while (1) {
 
-        GPIO_WriteHigh(LED_GPIO_PORT, LED_GPIO_PIN);
+        GPIO_WriteHigh(PORTC, LED_BUILTIN);
+        GPIO_WriteLow(PORTC,  LED_ROUGE);
         Delay(2);
-        GPIO_WriteLow(LED_GPIO_PORT, LED_GPIO_PIN);
+        GPIO_WriteLow(PORTC,  LED_BUILTIN);
+        GPIO_WriteHigh(PORTC, LED_ROUGE);
         Delay(10);
     }
 }

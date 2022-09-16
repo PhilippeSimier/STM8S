@@ -48,7 +48,7 @@
 #if defined (STM8S208) || defined (STM8AF52Ax)
 // #include "stm8s_can.h"
 #endif /* (STM8S208) || (STM8AF52Ax) */
-//#include "stm8s_clk.h"
+#include "stm8s_clk.h"
 //#include "stm8s_exti.h"
 //#include "stm8s_flash.h"
 #include "stm8s_gpio.h"
@@ -74,7 +74,7 @@
 #endif  /* (STM8S903) || (STM8AF622x) */
 #if defined(STM8S208) || defined(STM8S207) || defined(STM8S007) || defined(STM8S103) ||\
     defined(STM8S003) || defined(STM8S001) || defined(STM8S903) || defined (STM8AF52Ax) || defined (STM8AF62Ax)
-// #include "stm8s_uart1.h"
+#include "stm8s_uart1.h"
 #endif /* (STM8S208) || (STM8S207) || (STM8S103) || (STM8S001) || (STM8S903) || (STM8AF52Ax) || (STM8AF62Ax) */
 #if defined(STM8S105) || defined(STM8S005) ||  defined (STM8AF626x)
 // #include "stm8s_uart2.h"
