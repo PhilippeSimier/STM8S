@@ -1,20 +1,21 @@
 ﻿# STM8S
 
 ## Introduction
+La série STM8S de microcontrôleurs 8 bits bénéficie de la technologie 130 nm de ST et d'une architecture de cœur avancée **pouvant atteindre 20 MIPS à 24 MHz** .
 
 ![Gamme STM8S20](/gamme_STM8S20.png)
 
-A titre d'exemple, Vous trouverez dans ce dépot, des programmes en langage C pour utiliser la carte STM8S207.
-Cette carte est compatible au niveau des broches avec l' arduino nano. **Attention cela ne veut pas dire que vous pouvez utiliser le framwork Arduino.** 
+A titre d'exemple, Vous trouverez dans ce dépot, des programmes en langage C pour utiliser le kits d'évaluation **nucleo_8s207k8**.
+Cette carte est compatible au niveau des broches avec l'arduino nano. **Attention cela ne veut pas dire que vous pouvez utiliser le framwork Arduino.** 
 
-La carte posséde un bus SPI, un bus I2C, 6 entrées analogiques, une liaison série et des broches GPIO.
+Le microcontrôleur possède un ensemble complet de minuteries, interfaces (UART, SPI, I²C), ADC 10 bits, système de contrôle d'horloge interne et externe, chiens de garde, unité de réveil automatique.
 
 ![brochage NUCLEO-8S207K8](/brochage_NUCLEO-8S207K8.png)
 
 Côté gauche
 |Pin name| STM8 pin | Function|
 |--|--|--|
-| D1|  PD5|  UART3_TX  |  
+| D1|  PD5|  UART_TX  |  
 | D0|  PD6|  UART_RX |
 | RESET | NRST | RESET |
 | GND  | - | Ground |
@@ -49,9 +50,9 @@ Côté droit
 | +3V3 | - | 3.3 V I/O |
 | D13 | PC5 | SPI clock |
 
-## Configuration de platformIO
+## Configuration du projet avec platformIO
 
-Créer un projet pour l'EDI netbeans en utilisant la commande suivante:
+Créer un projet pour l'EDI Netbeans en utilisant la commande suivante:
 ```bash
 	pio project init --ide netbeans --board nucleo_8s207k8
 ```
@@ -64,38 +65,56 @@ framework = spl
 ``` 
 ## Programmation
 
-La carte se programme en langage C. A ma connaissance le langage C++ n'est pas supporté.
-Le programme doit impérativement contenir la définition d'une fonction `assert_failed` afin de gérer les erreurs irrécupérables. 
+La carte se programme en langage C. *(A ma connaissance le langage C++ n'est pas supporté).*
+Le programme doit impérativement contenir la définition d'une fonction `assert_failed` afin de gérer les assertions irrécupérables. 
 ```c
 void assert_failed(uint8_t* file, uint32_t line) {
-     // Infinite loop 
+    (void) file;
+    (void) line;
+    // Infinite loop 
     while (1) {
     }
 }
 ```
-Le programme principale
+### Le programme principale 
+Dans le setup, initialisation des broches  PC5 et PC7 en sortie push pull
+Dans la loop, écriture  des valeurs logiques avec les GPIO_WriteHigh et GPIO_WriteLow.
 ```c
 #include <stm8s_conf.h>
-
-#define LED_GPIO_PORT  GPIOC
-#define LED_GPIO_PIN   (GPIO_Pin_TypeDef)GPIO_PIN_5
+#define PORTC  GPIOC
+#define LED_BUILTIN    GPIO_PIN_5
+#define LED_ROUGE      GPIO_PIN_7
 
 void main() {
-
-    /* Setup  Initialize GPIO */
-    GPIO_Init(LED_GPIO_PORT,  LED_GPIO_PIN, GPIO_MODE_OUT_PP_LOW_FAST);
+    // Setup  Initialize broches PC5 & PC7 
+    GPIO_Init(PORTC, LED_BUILTIN, GPIO_MODE_OUT_PP_LOW_FAST); // Output push-pull, low level, 10MHz
+    GPIO_Init(PORTC, LED_ROUGE,   GPIO_MODE_OUT_PP_LOW_SLOW); // Output push-pull, low level, 2MHz
  
-    /* Loop */
+    // Loop 
     while (1) {
-
-        GPIO_WriteHigh(LED_GPIO_PORT,  LED_GPIO_PIN);
+        GPIO_WriteHigh(PORTC, LED_BUILTIN);
+        GPIO_WriteLow(PORTC,  LED_ROUGE);
         Delay(2);
-        GPIO_WriteLow(LED_GPIO_PORT,   LED_GPIO_PIN);
+        GPIO_WriteLow(PORTC,  LED_BUILTIN);
+        GPIO_WriteHigh(PORTC, LED_ROUGE);
         Delay(10);
     }
 }
 ```
-
+### La fonction Delay
+Le delay d'attente consiste simplement à tourner dans des boucles imbriquées. 
+```c
+void Delay(uint16_t nCount) {
+    uint16_t n = 0xFFFF;
+    while (nCount) {
+        n = 0xFFFF;
+        while (n) {
+            n--;
+        }
+        nCount--;
+    }
+}
+```
 ## Compilation
 Résultat de la compilation :
 ```
@@ -138,8 +157,18 @@ RUN FINISHED; exit value 0; real time: 1s; user: 120ms; system: 700ms
 ```
 
 
-## Documentation officielle
+## Documentation constructeur ST
 
 Documentation carte [nucleo 8s207k8](https://www.st.com/en/evaluation-tools/nucleo-8s207k8.html#documentation)
 
+# Changelog
 
+**17/09/2022 : ** Creation du README.md 
+
+> **Notes :**
+
+
+> - Licence : **licence publique générale** ![enter image description here](https://img.shields.io/badge/licence-GPL-green.svg)
+> - Auteur **Philippe SIMIER** Lycée Touchard Le Mans
+>  ![enter image description here](https://img.shields.io/badge/built-passing-green.svg)
+<!-- TOOLBOX 
