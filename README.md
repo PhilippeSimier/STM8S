@@ -1,7 +1,7 @@
 ﻿# STM8S
 
 ## Introduction
-La série STM8S de microcontrôleurs 8 bits bénéficie de la technologie 130 nm de ST et d'une architecture de cœur avancée **pouvant atteindre 20 MIPS à 24 MHz** .
+La série STM8S20 de microcontrôleurs 8 bits bénéficie de la technologie 130 nm de ST et d'une architecture de cœur avancée **pouvant atteindre 20 MIPS à 24 MHz** .
 
 ![Gamme STM8S20](/gamme_STM8S20.png)
 
