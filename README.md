@@ -1,14 +1,14 @@
-﻿# STM8S
+﻿# STM8S20
 
 ## Introduction
 La série STM8S20 de microcontrôleurs 8 bits bénéficie de la technologie 130 nm de ST et d'une architecture de cœur avancée **pouvant atteindre 20 MIPS à 24 MHz** .
 
 ![Gamme STM8S20](/gamme_STM8S20.png)
 
-A titre d'exemple, Vous trouverez dans ce dépot, des programmes en langage C pour utiliser le kits d'évaluation **nucleo_8s207k8**.
-Cette carte est compatible au niveau des broches avec l'arduino nano. **Attention cela ne veut pas dire que vous pouvez utiliser le framwork Arduino.** 
+A titre d'exemple, vous trouverez dans ce dépôt, des programmes en langage C pour utiliser le kits d'évaluation **nucleo_8s207k8**.
+Cette carte est compatible au niveau des broches avec l'Arduino nano. **Attention cela ne veut pas dire que vous pouvez utiliser le framwork Arduino.**  
 
-Le microcontrôleur possède un ensemble complet de minuteries, interfaces (UART, SPI, I²C), ADC 10 bits, système de contrôle d'horloge interne et externe, chiens de garde, unité de réveil automatique.
+Le microcontrôleur possède un ensemble complet de minuteries, interfaces (UART, SPI, I²C), ADC 10 bits, système de contrôle d'horloge interne et externe, chiens de garde, unité de réveil automatique, 64KB de mémoire FLASH et 6KB de mémoire RAM. 
 
 ![brochage NUCLEO-8S207K8](/brochage_NUCLEO-8S207K8.png)
 
@@ -50,7 +50,27 @@ Côté droit
 | +3V3 | - | 3.3 V I/O |
 | D13 | PC5 | SPI clock |
 
+La carte a une sonde de débogage intégrée et **EST PRÊTE** pour le débogage ! Vous n'avez pas besoin d'utiliser/d'acheter une sonde de débogage externe.
+
 ## Configuration du projet avec platformIO
+Lister les cartes disponibles STM8
+```
+$ pio boards stm8
+
+Platform: ststm8
+=========================================================================================
+ID              MCU           Frequency    Flash    RAM    Name
+--------------  ------------  -----------  -------  -----  ------------------------------
+nucleo_8s207k8  STM8S207K8T6  16MHz        64KB     6KB    NUCLEO-8S207K8
+nucleo_8s208rb  STM8S208RBT6  16MHz        128KB    6KB    NUCLEO-8S208RB
+stm8sdisco      STM8S105C6T6  16MHz        32KB     2KB    ST STM8S-DISCOVERY
+stm8s003f3      STM8S003F3P6  16MHz        8KB      1KB    ST STM8S003F3 chip
+stm8sblue       STM8S103F3P6  16MHz        8KB      1KB    ST STM8S103F3 Breakout Board
+stm8sblack      STM8S105K4T6  16MHz        16KB     2KB    ST STM8S105K4T6 Breakout Board
+mb208           STM8S208MBT6  16MHz        128KB    6KB    sduino MB (STM8S208MBT6B)
+s8uno           STM8S105K6T6  16MHz        32KB     2KB    sduino UNO (STM8S105K6)
+
+```
 
 Créer un projet pour l'EDI Netbeans en utilisant la commande suivante:
 ```bash
@@ -63,10 +83,12 @@ platform = ststm8
 board = nucleo_8s207k8
 framework = spl
 ``` 
+**spl** est la bibliothèque de périphériques standard pour microcontrôleurs ST STM8S/A
+
 ## Programmation
 
 La carte se programme en langage C. *(A ma connaissance le langage C++ n'est pas supporté).*
-Le programme doit impérativement contenir la définition d'une fonction `assert_failed` afin de gérer les assertions irrécupérables. 
+Le programme doit impérativement contenir la définition d'une fonction `assert_failed` afin de gérer les assertions. 
 ```c
 void assert_failed(uint8_t* file, uint32_t line) {
     (void) file;
@@ -77,6 +99,7 @@ void assert_failed(uint8_t* file, uint32_t line) {
 }
 ```
 ### Le programme principale 
+
 Dans le setup, initialisation des broches  PC5 et PC7 en sortie push pull
 Dans la loop, écriture  des valeurs logiques avec les GPIO_WriteHigh et GPIO_WriteLow.
 ```c
@@ -116,6 +139,12 @@ void Delay(uint16_t nCount) {
 }
 ```
 ## Compilation
+
+La commande suivante compile le programme et le télécharge sur la cible 
+
+```bash
+pio run --target upload
+```
 Résultat de la compilation :
 ```
 Processing nucleo_8s207k8 (platform: ststm8; board: nucleo_8s207k8; framework: spl)

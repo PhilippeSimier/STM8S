@@ -2,7 +2,8 @@
  * @file    main.c
  * @author  Philippe SIMIER Lycée Touchard Le Mans
  * @date    13 Septembre 2022
- * @brief   Blink led builtin.
+ * @brief   Projet de clignotement simple sans interruptions
+ *          Principalement pour tester la chaîne d'outils
  */
 
 #include <stm8s_conf.h>
