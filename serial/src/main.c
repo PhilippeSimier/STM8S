@@ -31,51 +31,29 @@
  * We want this example to work on both types of chips, so we 
  * macro-define all the correct SPL functions to the default UART of the device. 
  * 
- * UART1 devices: STM8S208, STM8S207, STM8S007, STM8S103, STM8S003, STM8S001, STM8S903
- * STM8AF52Ax, STM8AF62Ax
- * UART2 devices (which do not have UART1): STM8S105, STM8S005, STM8AF626x
+ * UART3 devices: STM8S207
  * 
- * For the TX and RX pins, see chip datasheet.
- * For STM8S103 devices, this is e.g. TX=PD5, RX=PD6.
  */
-#if defined(STM8S105) || defined(STM8S005) ||  defined (STM8AF626x)
-#define UART_NAME "UART2"
-#define UART_INIT UART2_Init
-#define UART_DEINIT UART2_DeInit
-#define UART_SENDDATA8 UART2_SendData8
-#define UART_RECEIVEDATA8 UART2_ReceiveData8
-#define UART_GETFLAGSTATUS UART2_GetFlagStatus
-#define UART_FLAG_RXNE UART2_FLAG_RXNE
-#define UART_FLAG_TXE UART2_FLAG_TXE
-#define UART_WORDLENGTH_8D UART2_WORDLENGTH_8D
-#define UART_STOPBITS_1 UART2_STOPBITS_1
-#define UART_PARITY_NO UART2_PARITY_NO
-#define UART_SYNCMODE_CLOCK_DISABLE UART2_SYNCMODE_CLOCK_DISABLE
-#define UART_MODE_TXRX_ENABLE UART2_MODE_TXRX_ENABLE
-#else
-/* other boards have normal UART 1*/
+
 #define UART_NAME "UART 3"
-#define UART_INIT UART3_Init
-#define UART_DEINIT UART3_DeInit
+
 #define UART_SENDDATA8 UART3_SendData8
 #define UART_RECEIVEDATA8 UART3_ReceiveData8
 #define UART_GETFLAGSTATUS UART3_GetFlagStatus
 #define UART_FLAG_RXNE UART3_FLAG_RXNE
 #define UART_FLAG_TXE UART3_FLAG_TXE
-#define UART_WORDLENGTH_8D UART3_WORDLENGTH_8D
-#define UART_STOPBITS_1 UART3_STOPBITS_1
-#define UART_PARITY_NO UART3_PARITY_NO
-//#define UART_SYNCMODE_CLOCK_DISABLE UART1_SYNCMODE_CLOCK_DISABLE
-#define UART_MODE_TXRX_ENABLE UART3_MODE_TXRX_ENABLE
-#endif
+
 
 void main(void) {
-    /*High speed internal clock prescaler: 1*/
+    
     CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1);
 
-    UART_DEINIT();
-    UART_INIT((uint32_t) 115200, UART_WORDLENGTH_8D, UART_STOPBITS_1, UART_PARITY_NO,
-            UART_MODE_TXRX_ENABLE);
+    UART3_DeInit();
+    UART3_Init((uint32_t) 115200, 
+            UART3_WORDLENGTH_8D,
+            UART3_STOPBITS_1, 
+            UART3_PARITY_NO,
+            UART3_MODE_TXRX_ENABLE);
 
     /* Output a message on Hyperterminal using printf function */
     printf("\n" UART_NAME " Example :retarget the C library printf()/getchar() functions to the UART\r\n");
@@ -83,7 +61,8 @@ void main(void) {
     
     while (1) {
         i++;
-        printf("Message de STM8S07!\r\n");
+        printf("%3d", i);
+        printf(" Message de STM8S07!\r\n");
 
         // simple wait ~1000ms @ 16MHz
         for (uint32_t i = 0; i < 1600000L; i++)
