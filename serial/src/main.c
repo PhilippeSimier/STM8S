@@ -10,6 +10,7 @@
 #include <Serial.h>
 
 
+
 void main(void) {
 
     begin(115200);
@@ -23,11 +24,15 @@ void main(void) {
         printf("%3d", i);
         printf(" Message de STM8S07!\r\n");
 
-        delay(2);
+        delay_ms(2);
 
         /* you may also use blocking getchar() to get input */
         char ans = getchar();
+        
         printf("%c", ans);
         
+        ans = Bcd_2_Dec(ans);
+        printf(" Ascii 0x%d\r\n", ans);       
     }
 }
+

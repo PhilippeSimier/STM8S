@@ -45,11 +45,12 @@ int getchar(void) {
 }
 
 
-/**
- * @brief 
- * @param nb of ms
+/* @Brief  :   Delay function
+ * @Param  :   Time to delay (millis seconds)
+ * @Return :   None
+ * @Note   :   None
  */
-void delay(uint32_t nb) {
+void delay_ms(uint32_t nb) {
 
     for (uint32_t i = 0; i < nb; i++) {
         // simple wait ~1ms @ 16MHz
@@ -58,7 +59,17 @@ void delay(uint32_t nb) {
     }
 }
 
-#ifdef USE_FULL_ASSERT
+
+/**
+ * 
+ * @param data decimal value
+ * @return data hexa value
+ */
+uint8_t Bcd_2_Dec(uint8_t data)
+{
+	return (data>>4)*10+(data&0x0f);
+}
+
 
 /**
  * @brief  Reports the name of the source file and the source line number
@@ -67,6 +78,7 @@ void delay(uint32_t nb) {
  * @param line: assert_param error line source number
  * @retval None
  */
+#ifdef USE_FULL_ASSERT
 void assert_failed(uint8_t* file, uint32_t line) {
     /* User can add his own implementation to report the file name and line number,
        ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
