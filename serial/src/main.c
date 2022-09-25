@@ -2,7 +2,7 @@
  * @file    main.c
  * @author  Philippe SIMIER Lycée Touchard Le Mans
  * @date    23 Septembre 2022
- * @brief   Projet liaison série STSM207 avec platformIO
+ * @brief   Projet liaison série STM8S207 avec platformIO
  *          Principalement pour tester la liaison série avec le câble USB
  */
 
@@ -10,8 +10,7 @@
 #include "stdio.h"
 
 
-#define PUTCHAR_PROTOTYPE int putchar (int c)
-#define GETCHAR_PROTOTYPE int getchar (void)
+
 
 
 void main(void) {
