@@ -10,9 +10,6 @@
 #include "stdio.h"
 
 
-
-
-
 void main(void) {
     
     CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1);
@@ -72,7 +69,7 @@ int getchar (void)
     int c = 0;
 
     /* Loop until the Read data register flag is SET */
-    while (UART3_GetFlagStatus(UART3_FLAG_RXNE) == RESET);
+    while (UART3_GetFlagStatus(UART3_FLAG_RXNE) == RESET); /* wait until data arrived */
     c = UART3_ReceiveData8();
     return (c);
 }

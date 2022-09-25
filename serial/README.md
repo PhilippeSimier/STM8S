@@ -1,5 +1,16 @@
 ﻿# STM8S
 
+## Introduction
+Cet exemple montre comment rediriger les fonctions `printf/getchar` de la bibliothèque C vers l'UART3 . Le programme proposé génère un message avec `printf` sur le terminal à l'aide de l'UART3 et continue d'attendre qu'un caractère soit saisi par l'utilisateur.
+
+L'UART3 est configuré comme suit :
+
+-   BaudRate = 115200 bauds
+-   Longueur de mot = 8 bits
+-   Un bit d'arrêt
+-   Pas de parité
+-   Réception et transmission activées
+
 ## Liaison Série
 
 La version du STM8S207 dans un boitier  32 broches ne possède qu'un seul uart connecté, l'**UART3**.
