@@ -15,24 +15,21 @@ void main(void) {
 
     begin(115200);
 
-    printf("\n UART3  Example :retarget the C library printf()/getchar() functions to the UART3\r\n");
+    printf("\n Serial  Example \n\r retarget the C library printf()/getchar() functions to the UART3\r\n");
 
     int i = 0;
 
     while (1) {
         i++;
         printf("%3d", i);
-        printf(" Message de STM8S07!\r\n");
+        printf(" Entrer un caractère!\r\n");
 
         delay_ms(2);
 
         /* you may also use blocking getchar() to get input */
         char ans = getchar();
-        
         printf("%c", ans);
-        
-        ans = Bcd_2_Dec(ans);
-        printf(" Ascii 0x%d\r\n", ans);       
+        printf(" Code Ascii 0x%X\r\n", ans);       
     }
 }
 
