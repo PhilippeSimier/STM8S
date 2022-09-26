@@ -1,6 +1,9 @@
 /* 
  * File:   main.c
  * Author: philippe SIMIER Lycée touchard Le Mans
+ * 
+ * Programme pour tester la laison I2C avec une eeprom I2C
+ * Atmel 24C256 
  *
  * Created on 26 septembre 2022, 14:55
  */
@@ -16,7 +19,7 @@ typedef enum
 }i2c_memory_address_size;
 
 
-#define DS1307_ADD  0x68
+#define AT24C256_ADD  0x50
 
 void i2c_master_init(void);
 uint8_t i2c_mem_read_arr(uint16_t device_address, uint16_t mem_address_start, 
@@ -36,7 +39,7 @@ void main(void) {
 
     while (1) {
         delay_ms(1000);
-        ret = i2c_mem_read_arr(DS1307_ADD<<1, 0x00, I2C_MEMORY_ADDRESS_SIZE_8BIT, receive_data, 7);
+        ret = i2c_mem_read_arr(AT24C256_ADD<<1, 0x00, I2C_MEMORY_ADDRESS_SIZE_8BIT, receive_data, 7);
         printf("\r\nret : %d", ret);
     }
 
