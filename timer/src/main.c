@@ -33,7 +33,7 @@ void main(void) {
     bool flag = false;
 
    
-    //la led s'allume et s'éteint toutes les 500ms  7812/2=3906
+    //la led s'allume et s'éteint toutes les 0.5 s  7812/2=3906
     while (1) {
         
         //test du timer
@@ -87,14 +87,14 @@ void clock_setup(void) {
 /**
  * @brief Active l'horloge du timer 2
  *      Configure le pré-diviseur, sur 2048
- *      Configure le retour à zero du compteur sur la valeur nb
+ *      Configure la valeur d'Autoreload
  *      la periode d'une seconde correspond à 7812
- * @param nb la valeur maxi du compteur
+ * @param PrescalerValue
  */
-void TIM2_setup(uint16_t nb) {
+void TIM2_setup(uint16_t PrescalerValue) {
     CLK_PeripheralClockConfig(CLK_PERIPHERAL_TIMER2, ENABLE);
     TIM2_DeInit();    
-    TIM2_TimeBaseInit(TIM2_PRESCALER_2048, nb); 
+    TIM2_TimeBaseInit(TIM2_PRESCALER_2048, PrescalerValue); 
     TIM2_Cmd(ENABLE);
 }
 
