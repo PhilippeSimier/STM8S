@@ -1,8 +1,21 @@
 ﻿# STM8 Timer
 
-## Calcul de la période
+Les temporisateurs du microcontrôleurs STM8S20 sont des périphériques très utiles et essentiels pour les applications de temporisation.
+les microcontrôleurs de la famille STM8S20 possédent 4 timers.
 
-Les temporisateurs à l'intérieur des microcontrôleurs STM8 sont des périphériques très utiles et essentiels pour les applications de temporisation.
+ - TIM1 - 16-bit advanced control timer
+ - TIM2, TIM3 - 16-bit general purpose timers
+ - TIM4 - 8-bit basic timer
+
+![Les timer](/timer/TIM_timer.png)
+
+##  Génération de durée
+
+La génération d'une durée repose sur le comptage d'un nombre requis de périodes élémentaires. 
+Ce nombre est fourni au temporisateur avant le démarrage du comptage. Lorsque le contenu du compteur a atteint cette valeur le temporisateur signale que la durée est écoulée.  Lorsque la valeur du compteur dépasse celle du registre de référence, le contenu du compteur est remis à 0.
+La fréquence d'un STM8S207 est de 16MHz, avec un compteur de 16 bits cadencé par l'horloge principale, on pourrait compter jusqu'à 65536/16MHz soit une durée maximale de 4ms. Dans de nombreux cas cela est inadapté, on active alors dans le temporisateur un diviseur de fréquence ("prescaler") en entrée qui va permettre de diviser par une puissance de 2 la fréquence du signal entré.  Cette valeur du diviseur est définie dans le registre spécifique (PSCR) du timer.
+
+## Calcul de la période
 
 Le STM8S possède un oscillateur interne avec une fréquence de 16 MHz. Par défaut, il sera utilisé comme source d'horloge système avec le prédiviseur 1, ce qui signifie que la fréquence d'horloge système sera de **16 MHz**. 
 
