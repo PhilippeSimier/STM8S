@@ -15,7 +15,7 @@ La génération d'une durée repose sur le comptage d'un nombre requis de pério
 Ce nombre est fourni au temporisateur avant le démarrage du comptage. Lorsque le contenu du compteur a atteint ce nombre requis le temporisateur signale que la durée est écoulée et le contenu du compteur est remis à 0.
 La fréquence d'un STM8S207 est de 16MHz, avec un compteur de 16 bits cadencé par l'horloge principale, on pourrait compter jusqu'à 65536/16MHz soit une durée maximale de 4ms. Dans de nombreux cas cela est trop petit, on active alors un diviseur de fréquence ("prescaler") en entrée qui va permettre de diviser par une puissance de 2 la fréquence du signal entré dans le compteur.  Cette valeur du diviseur est définie dans un registre spécifique  du timer.
 
-## Exempel de calcul de la période
+## Exemple de calcul de la période
 
 Le STM8S20 possède un oscillateur interne avec une fréquence de 16 MHz. Par défaut, il est utilisé comme source d'horloge système avec le prédiviseur 1, ce qui signifie que la fréquence d'horloge système est de **16 MHz**. 
 
