@@ -1,6 +1,6 @@
 ﻿# STM8 Timer
 
-Les temporisateurs du microcontrôleurs STM8S20 sont des périphériques  pour réaliser des temporisations.
+Les timers du microcontrôleurs STM8S20 sont des périphériques  pour réaliser des temporisations.
 les microcontrôleurs de la famille STM8S20 possédent 4 timers.
 
  - TIM1 - 16-bit advanced control timer
