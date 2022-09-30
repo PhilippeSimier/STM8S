@@ -5,6 +5,10 @@
       <df name="include">
       </df>
       <df name="lib">
+        <df name="Serial">
+          <in>Serial.c</in>
+          <in>Serial.h</in>
+        </df>
       </df>
       <df name="src">
         <in>main.c</in>
@@ -26,13 +30,13 @@
       </toolsSet>
       <compile>
         <compiledirpicklist>
-          <compiledirpicklistitem>${AUTO_FOLDER}</compiledirpicklistitem>
           <compiledirpicklistitem>.</compiledirpicklistitem>
+          <compiledirpicklistitem>${AUTO_FOLDER}</compiledirpicklistitem>
         </compiledirpicklist>
         <compiledir>${AUTO_FOLDER}</compiledir>
         <compilecommandpicklist>
-          <compilecommandpicklistitem>${AUTO_COMPILE}</compilecommandpicklistitem>
           <compilecommandpicklistitem>${MAKE} ${ITEM_NAME}.o</compilecommandpicklistitem>
+          <compilecommandpicklistitem>${AUTO_COMPILE}</compilecommandpicklistitem>
         </compilecommandpicklist>
         <compilecommand>${AUTO_COMPILE}</compilecommand>
       </compile>
@@ -54,8 +58,9 @@
       <runprofile version="9">
         <runcommandpicklist>
           <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
+          <runcommandpicklistitem>pio run --target upload</runcommandpicklistitem>
         </runcommandpicklist>
-        <runcommand>"${OUTPUT_PATH}"</runcommand>
+        <runcommand>pio run --target upload</runcommand>
         <rundir></rundir>
         <buildfirst>false</buildfirst>
         <terminal-type>0</terminal-type>
