@@ -52,11 +52,12 @@ void GPIO_setup() {
 }
 
 void clock_setup() {
-    CLK_DeInit();
 
+    CLK_DeInit();
     CLK_HSECmd(DISABLE);
     CLK_LSICmd(DISABLE);
     CLK_HSICmd(ENABLE);
+
     while (CLK_GetFlagStatus(CLK_FLAG_HSIRDY) == false);
 
     CLK_ClockSwitchCmd(ENABLE);
@@ -82,5 +83,9 @@ void TIM2_setup(void) {
     TIM2_DeInit();
     TIM2_TimeBaseInit(TIM2_PRESCALER_32, 1000);
     TIM2_OC2Init(TIM2_OCMODE_PWM1, TIM2_OUTPUTSTATE_ENABLE, 1000, TIM2_OCPOLARITY_HIGH);
+
+    TIM2_OC2Init(TIM2_OCMODE_PWM1, TIM2_OUTPUTSTATE_ENABLE, 1000, TIM2_OCPOLARITY_LOW);
+    TIM2_OC3Init(TIM2_OCMODE_PWM1, TIM2_OUTPUTSTATE_ENABLE, 1000, TIM2_OCPOLARITY_HIGH);
+
     TIM2_Cmd(ENABLE);
 }
