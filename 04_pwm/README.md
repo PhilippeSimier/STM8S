@@ -1,5 +1,7 @@
 ﻿# STM8 Timer PWM
 
+La modulation de largeur d'impulsion (PWM) est une fonctionnalité indispensable de tout microcontrôleur. Le PWM a de nombreuses utilisations comme le contrôle moteur,  le contrôle de l'éclairage. Dans cette section, nous verrons comment utiliser TIM2 pour générer des PWM simples.
+
 ## Timer 2
 Le timer 2 possède trois comparateurs dont les sorties sont associées aux broches GPIO suivantes :
 
@@ -24,20 +26,28 @@ Le timer peut fournir  3 signaux PWM de rapports cycliques différents.
 
 
 ## Programme
+Ceci est un exemple assez simple. Ici, les trois canaux de TIM2 sont utilisés pour fondre et faire briller en douceur trois LED connectées aux canaux de la minuterie.
+
+Nous devons d'abord définir la base de temps avant de configurer réellement les canaux PWM.  De plus, nous pouvons définir la polarité PWM et commander le canal si oui ou non il doit se comporter de manière inversée.
 ```c
 /**
  * @brief Active l'horloge du timer 2
- *      Configure le pré-diviseur, sur 2048
- *      Configure le retour à zero du compteur sur la valeur nb
+ *      Configure le pré-diviseur, sur 32 (500 kHz)
+ *      Configure le retour à zero du compteur sur la valeur 1000
  *      la periode d'une seconde correspond à 7812
- * @param nb la valeur maxi du compteur
  */
 void TIM2_setup(void) {
-	CLK_PeripheralClockConfig(CLK_PERIPHERAL_TIMER2, ENABLE);
+
     TIM2_DeInit();
-    TIM2_TimeBaseInit(TIM2_PRESCALER_2048, 7812); 
+    TIM2_TimeBaseInit(TIM2_PRESCALER_32, 1000);
+    TIM2_OC2Init(TIM2_OCMODE_PWM1, TIM2_OUTPUTSTATE_ENABLE, 1000, TIM2_OCPOLARITY_HIGH);
+    TIM2_OC2Init(TIM2_OCMODE_PWM1, TIM2_OUTPUTSTATE_ENABLE, 1000, TIM2_OCPOLARITY_LOW);
+    TIM2_OC3Init(TIM2_OCMODE_PWM1, TIM2_OUTPUTSTATE_ENABLE, 1000, TIM2_OCPOLARITY_HIGH);
     TIM2_Cmd(ENABLE);
 }
 ```
-
-
+Pour changer le rapport cyclique PWM, nous devons appeler la fonction suivante :
+```c
+	TIM2_SetCompare2(pwm_duty);  // pour le canal 2
+```
+Notez que dans les micros STM8, il existe un compromis entre le rapport cyclique et la fréquence PWM. Si la résolution PWM, c'est-à-dire le rapport cyclique est grand, alors la fréquence PWM est petite et vice-versa. Ceci est vrai pour toutes les minuteries.

@@ -13,8 +13,6 @@
       <df name="src">
         <in>main.c</in>
         <in>stm8s_conf.h</in>
-        <in>stm8s_it.c</in>
-        <in>stm8s_it.h</in>
       </df>
       <df name="test">
       </df>

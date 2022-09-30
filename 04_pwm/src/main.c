@@ -3,10 +3,13 @@
  * 
  */
 #include "stm8s.h"
-#include "stm8s_it.h"    /* SDCC patch: required by SDCC for interrupts */
 #include "stdio.h"
 #include <stdbool.h>
 #include <Serial.h>
+
+
+#define ENABLE true
+#define DISABLE false
 
 #define PORTC  GPIOC
 #define PORTD  GPIOD
@@ -43,9 +46,6 @@ void main(void) {
 
 void GPIO_setup() {
 
-    GPIO_DeInit(GPIOA);
-    GPIO_DeInit(GPIOB);
-    GPIO_DeInit(GPIOD);
     GPIO_Init(PORTC, LED_BUILTIN, GPIO_MODE_OUT_PP_LOW_FAST); // PC5  Output push-pull, low level, 10MHz
     GPIO_Init(PORTD, GPIO_PWM_TIM2_CH2, GPIO_MODE_OUT_PP_HIGH_FAST); // PD3  Output push-pull, low level, 10MHz
 
@@ -57,7 +57,7 @@ void clock_setup() {
     CLK_HSECmd(DISABLE);
     CLK_LSICmd(DISABLE);
     CLK_HSICmd(ENABLE);
-    while (CLK_GetFlagStatus(CLK_FLAG_HSIRDY) == FALSE);
+    while (CLK_GetFlagStatus(CLK_FLAG_HSIRDY) == false);
 
     CLK_ClockSwitchCmd(ENABLE);
     //CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV8); //un peu lent
