@@ -7,7 +7,7 @@ les microcontrôleurs de la famille STM8S20 possédent 4 timers.
  - TIM2, TIM3 - 16-bit general purpose timers
  - TIM4 - 8-bit basic timer
 
-![Les timer](/timer/TIM_timer.png)
+![Les timer](/03_timer/TIM_timer.png)
 
 ##  Génération de durée
 
