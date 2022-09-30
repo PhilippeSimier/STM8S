@@ -15,7 +15,7 @@ L'UART3 est configuré comme suit :
 
 La version du STM8S207 dans un boitier  32 broches ne possède qu'un seul uart connecté, l'**UART3**.
 
-![Brochage STM8S207](/serial/brochageSTM8S2007.png)
+![Brochage STM8S207](/02_serial/brochageSTM8S2007.png)
 
 UART3  est connecté  à  **ST-LINK/V2-1** par l'intermédaire des ponts soudés SB3 et SB4. (Solder Bridge). Le flux série sur la liasison USB est disponible sur **ttyACM0** 
 
