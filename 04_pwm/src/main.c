@@ -1,7 +1,10 @@
-/*
- test du timer 2 tim2 16 bits
- * 
+/**
+ * @file    main.c
+ * @author  Philippe SIMIER Lycée Touchard Le Mans
+ * @date    29 Septembre 2022
+ * @brief   Projet pour tester le fonctionnement du timer2
  */
+
 #include "stm8s.h"
 #include "stdio.h"
 #include <stdbool.h>
@@ -11,10 +14,11 @@
 #define ENABLE true
 #define DISABLE false
 
-#define PORTC  GPIOC
-#define PORTD  GPIOD
+
 #define LED_BUILTIN          GPIO_PIN_5
-#define GPIO_PWM_TIM2_CH2    GPIO_PIN_3
+#define GPIO_PWM_TIM2_CH1    GPIO_PIN_4    // PD4
+#define GPIO_PWM_TIM2_CH2    GPIO_PIN_3    // PD3
+#define GPIO_PWM_TIM2_CH3    GPIO_PIN_3    // PA3
 
 void GPIO_setup();
 void clock_setup();
@@ -30,26 +34,33 @@ void main(void) {
     begin(115200);
     printf("Programme PWM Timer2\r\n");
 
-    int pwm_duty;
+    
 
     while (1) {
-        GPIO_WriteReverse(PORTC, LED_BUILTIN);
+        GPIO_WriteReverse(GPIOC, LED_BUILTIN);
 
         //test pwm sur sortie PD3
-        for (pwm_duty = 0; pwm_duty < 1000; pwm_duty += 5) {
+        for (int pwm_duty = 0; pwm_duty < 1000; pwm_duty += 5) {
+            TIM2_SetCompare1(pwm_duty);
             TIM2_SetCompare2(pwm_duty);
+            TIM2_SetCompare3(pwm_duty);
             delay_ms(10);
         }
-
     }
 }
 
+/**
+ * @brief Initialise la led Builtin et les trois sorties du timer2
+ */
 void GPIO_setup() {
 
-    GPIO_Init(PORTC, LED_BUILTIN, GPIO_MODE_OUT_PP_LOW_FAST); // PC5  Output push-pull, low level, 10MHz
-    GPIO_Init(PORTD, GPIO_PWM_TIM2_CH2, GPIO_MODE_OUT_PP_HIGH_FAST); // PD3  Output push-pull, low level, 10MHz
-
+    GPIO_Init(GPIOC, LED_BUILTIN, GPIO_MODE_OUT_PP_LOW_FAST);        // PC5  Output push-pull, low level, 10MHz
+    
+    GPIO_Init(GPIOD, GPIO_PWM_TIM2_CH1, GPIO_MODE_OUT_PP_HIGH_FAST); // PD4  Output push-pull, low level, 10MHz
+    GPIO_Init(GPIOD, GPIO_PWM_TIM2_CH2, GPIO_MODE_OUT_PP_HIGH_FAST); // PD3  Output push-pull, low level, 10MHz
+    GPIO_Init(GPIOA, GPIO_PWM_TIM2_CH3, GPIO_MODE_OUT_PP_HIGH_FAST); // PA3  Output push-pull, low level, 10MHz
 }
+
 
 void clock_setup() {
 
@@ -82,9 +93,9 @@ void TIM2_setup(void) {
 
     TIM2_DeInit();
     TIM2_TimeBaseInit(TIM2_PRESCALER_32, 1000);
+    
+    TIM2_OC1Init(TIM2_OCMODE_PWM1, TIM2_OUTPUTSTATE_ENABLE, 1000, TIM2_OCPOLARITY_LOW);
     TIM2_OC2Init(TIM2_OCMODE_PWM1, TIM2_OUTPUTSTATE_ENABLE, 1000, TIM2_OCPOLARITY_HIGH);
-
-    TIM2_OC2Init(TIM2_OCMODE_PWM1, TIM2_OUTPUTSTATE_ENABLE, 1000, TIM2_OCPOLARITY_LOW);
     TIM2_OC3Init(TIM2_OCMODE_PWM1, TIM2_OUTPUTSTATE_ENABLE, 1000, TIM2_OCPOLARITY_HIGH);
 
     TIM2_Cmd(ENABLE);

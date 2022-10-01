@@ -26,7 +26,7 @@ Le timer peut fournir  3 signaux PWM de rapports cycliques différents.
 
 
 ## Programme
-Ceci est un exemple assez simple. Ici, les trois canaux de TIM2 sont utilisés pour fondre et faire briller en douceur trois LED connectées aux canaux de la minuterie.
+Ceci est un exemple assez simple. Ici, les trois canaux de TIM2 sont utilisés pour fondre et faire briller en douceur trois LED connectées aux canaux de la minuterie. 
 
 Nous devons d'abord définir la base de temps avant de configurer réellement les canaux PWM.  De plus, nous pouvons définir la polarité PWM et commander le canal si oui ou non il doit se comporter de manière inversée.
 ```c
@@ -40,14 +40,28 @@ void TIM2_setup(void) {
 
     TIM2_DeInit();
     TIM2_TimeBaseInit(TIM2_PRESCALER_32, 1000);
-    TIM2_OC2Init(TIM2_OCMODE_PWM1, TIM2_OUTPUTSTATE_ENABLE, 1000, TIM2_OCPOLARITY_HIGH);
+    TIM2_OC1Init(TIM2_OCMODE_PWM1, TIM2_OUTPUTSTATE_ENABLE, 1000, TIM2_OCPOLARITY_HIGH);
     TIM2_OC2Init(TIM2_OCMODE_PWM1, TIM2_OUTPUTSTATE_ENABLE, 1000, TIM2_OCPOLARITY_LOW);
     TIM2_OC3Init(TIM2_OCMODE_PWM1, TIM2_OUTPUTSTATE_ENABLE, 1000, TIM2_OCPOLARITY_HIGH);
     TIM2_Cmd(ENABLE);
 }
 ```
-Pour changer le rapport cyclique PWM, nous devons appeler la fonction suivante :
+Les broches GPIO doivent être configurées en sortie
 ```c
-	TIM2_SetCompare2(pwm_duty);  // pour le canal 2
+void GPIO_setup() {
+
+    GPIO_Init(GPIOC, LED_BUILTIN, GPIO_MODE_OUT_PP_LOW_FAST);        // PC5  Output push-pull, low level, 10MHz
+    
+    GPIO_Init(GPIOD, GPIO_PWM_TIM2_CH1, GPIO_MODE_OUT_PP_HIGH_FAST); // PD4  Output push-pull, low level, 10MHz
+    GPIO_Init(GPIOD, GPIO_PWM_TIM2_CH2, GPIO_MODE_OUT_PP_HIGH_FAST); // PD3  Output push-pull, low level, 10MHz
+    GPIO_Init(GPIOA, GPIO_PWM_TIM2_CH3, GPIO_MODE_OUT_PP_HIGH_FAST); // PA3  Output push-pull, low level, 10MHz
+}
+```
+
+Pour changer le rapport cyclique PWM, nous devons appeler la fonction suivante :
+```c 
+	TIM2_SetCompare1(pwm_duty);   // pour le canal 1
+    TIM2_SetCompare2(pwm_duty);   // pour le canal 2
+    TIM2_SetCompare3(pwm_duty);	  // pour le canal 3
 ```
 Notez que dans les micros STM8, il existe un compromis entre le rapport cyclique et la fréquence PWM. Si la résolution PWM, c'est-à-dire le rapport cyclique est grand, alors la fréquence PWM est petite et vice-versa. Ceci est vrai pour toutes les minuteries.
