@@ -12,20 +12,25 @@
 #include <stm8s_conf.h>
 #include <Serial.h>
 
-typedef enum
-{
-	I2C_MEMORY_ADDRESS_SIZE_8BIT=	0x00,
-	I2C_MEMORY_ADDRESS_SIZE_16BIT=  0x01
-}i2c_memory_address_size;
+typedef enum {
+    I2C_MEMORY_ADDRESS_SIZE_8BIT = 0x00,
+    I2C_MEMORY_ADDRESS_SIZE_16BIT = 0x01
+} i2c_memory_address_size;
 
+
+
+#define I2C_PORT  (GPIOB)
+#define SDA_pin   (GPIO_PIN_5)
+#define SCL_pin   (GPIO_PIN_4)
 
 #define AT24C256_ADD  0x50
 
+
 void i2c_master_init(void);
-uint8_t i2c_mem_read_arr(uint16_t device_address, uint16_t mem_address_start, 
-                         i2c_memory_address_size I2C_MEMORY_ADDRESS_SIZE_X, 
-                         uint8_t* data_array, 
-                         uint16_t NumByteToRead);
+uint8_t i2c_mem_read_arr(uint16_t device_address, uint16_t mem_address_start,
+        i2c_memory_address_size I2C_MEMORY_ADDRESS_SIZE_X,
+        uint8_t* data_array,
+        uint16_t NumByteToRead);
 
 uint8_t receive_data[200];
 
@@ -39,40 +44,44 @@ void main(void) {
 
     while (1) {
         delay_ms(1000);
-        ret = i2c_mem_read_arr(AT24C256_ADD<<1, 0x00, I2C_MEMORY_ADDRESS_SIZE_8BIT, receive_data, 7);
+        ret = i2c_mem_read_arr(AT24C256_ADD << 1, 0x00, I2C_MEMORY_ADDRESS_SIZE_8BIT, receive_data, 7);
         printf("\r\nret : %d", ret);
     }
 
 }
 
-/* @Brief	:   Initialize I2C Module of MCU STM8S, mode master (400Khz)
+/* @Brief	:   Initialize I2C Module of MCU STM8S, mode master (100Khz)
  * @Para	:   None
  * @Return	:   None
  * @Note	:   SDA,SCL Pin see in the datasheet
  */
 void i2c_master_init(void) {
-    /* Deinit I2C */
+
     I2C_DeInit();
 
-    /* I2C Peripheral clock enable */
-    CLK_PeripheralClockConfig(CLK_PERIPHERAL_I2C, ENABLE);
+    CLK_PeripheralClockConfig(CLK_PERIPHERAL_I2C, ENABLE); /* I2C Peripheral clock enable */
 
-    /* Enable I2C Module */
-    I2C_Cmd(ENABLE);
 
+
+    //define SDA, SCL outputs, HiZ, Open drain, Fast
+    GPIO_Init(I2C_PORT, ((GPIO_Pin_TypeDef) (SCL_pin | SDA_pin)), GPIO_MODE_OUT_OD_HIZ_FAST);
+
+    I2C_Cmd(ENABLE); /* Enable I2C Module */
     /* I2C configuration after enabling it */
-    I2C_Init(400000, // SCL 400 Khz
+    I2C_Init(100000, // SCL 100 Khz
             0x50, // Sans importance parce que c'est le Maître
             I2C_DUTYCYCLE_2,
             I2C_ACK_CURR,
             I2C_ADDMODE_7BIT,
             16 // Supply Frequency = 16Mhz = FCPU
             );
+
+    
 }
 
 uint8_t i2c_mem_read_arr(uint16_t device_address, uint16_t mem_address_start, i2c_memory_address_size I2C_MEMORY_ADDRESS_SIZE_X, uint8_t* data_array, uint16_t NumByteToRead) {
-    
-    uint16_t time_out = 5000;
+
+    uint16_t time_out = 65535;
 
     /* If I2C bus is busy wait until it is free */
     while (I2C_GetFlagStatus(I2C_FLAG_BUSBUSY)&& (--time_out));
@@ -81,12 +90,12 @@ uint8_t i2c_mem_read_arr(uint16_t device_address, uint16_t mem_address_start, i2
     /* Send Start Condition then wait event EV5 */
     I2C_GenerateSTART(ENABLE);
     while ((!I2C_CheckEvent(I2C_EVENT_MASTER_MODE_SELECT))&& (--time_out));
-    if (!time_out) return 1;
+    if (!time_out) return 2;
 
     /* Send device address to write data then wait event EV6 */
     I2C_Send7bitAddress(device_address, I2C_DIRECTION_TX);
     while ((!I2C_CheckEvent(I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED))&& (--time_out));
-    if (!time_out) return 1;
+    if (!time_out) return 3;
 
     /* Send memory address pointer then wait event EV8_2 */
 
@@ -99,7 +108,7 @@ uint8_t i2c_mem_read_arr(uint16_t device_address, uint16_t mem_address_start, i2
             //Send MSB
             I2C_SendData((uint8_t) (mem_address_start >> 8));
             while ((!I2C_CheckEvent(I2C_EVENT_MASTER_BYTE_TRANSMITTED))&& (--time_out));
-            if (!time_out) return 1;
+            if (!time_out) return 4;
 
             //Send LSB
             I2C_SendData((uint8_t) (mem_address_start & 0x00ff));
@@ -107,17 +116,17 @@ uint8_t i2c_mem_read_arr(uint16_t device_address, uint16_t mem_address_start, i2
     }
 
     while ((!I2C_CheckEvent(I2C_EVENT_MASTER_BYTE_TRANSMITTED))&& (--time_out));
-    if (!time_out) return 1;
+    if (!time_out) return 5;
 
     /* Send Repeat Start Condition then wait event EV5 */
     I2C_GenerateSTART(ENABLE);
     while ((!I2C_CheckEvent(I2C_EVENT_MASTER_MODE_SELECT))&& (--time_out));
-    if (!time_out) return 1;
+    if (!time_out) return 6;
 
     /* Send device address to read data then wait event EV6 */
     I2C_Send7bitAddress(device_address, I2C_DIRECTION_RX);
     while ((!I2C_CheckEvent(I2C_EVENT_MASTER_RECEIVER_MODE_SELECTED))&& (--time_out));
-    if (!time_out) return 1;
+    if (!time_out) return 7;
 
     if (NumByteToRead == 1) {
         /* Disable Acknowledgement */
@@ -128,7 +137,7 @@ uint8_t i2c_mem_read_arr(uint16_t device_address, uint16_t mem_address_start, i2
 
         /* Poll on RxNE Flag */
         while ((I2C_GetFlagStatus(I2C_FLAG_RXNOTEMPTY) == RESET) && (--time_out));
-        if (!time_out) return 1;
+        if (!time_out) return 8;
 
         /* Read a byte from the Slave */
         *data_array = I2C_ReceiveData();
@@ -137,7 +146,7 @@ uint8_t i2c_mem_read_arr(uint16_t device_address, uint16_t mem_address_start, i2
 
         /* Poll on RxNE Flag */
         while ((I2C_GetFlagStatus(I2C_FLAG_RXNOTEMPTY) == RESET)&& (--time_out));
-        if (!time_out) return 1;
+        if (!time_out) return 9;
 
         *data_array = I2C_ReceiveData();
 
@@ -151,7 +160,7 @@ uint8_t i2c_mem_read_arr(uint16_t device_address, uint16_t mem_address_start, i2
 
         /* Poll on RxNE Flag */
         while ((I2C_GetFlagStatus(I2C_FLAG_RXNOTEMPTY) == RESET)&& (--time_out));
-        if (!time_out) return 1;
+        if (!time_out) return 10;
 
         enableInterrupts();
         /* Read a byte from the Slave */
@@ -160,7 +169,7 @@ uint8_t i2c_mem_read_arr(uint16_t device_address, uint16_t mem_address_start, i2
         while (NumByteToRead) {
             if (NumByteToRead != 3) /* Receive bytes from first byte until byte N-3 */ {
                 while ((I2C_GetFlagStatus(I2C_FLAG_TRANSFERFINISHED) == RESET)&& (--time_out));
-                if (!time_out) return 1;
+                if (!time_out) return 11;
 
                 /* Read a byte from the Slave */
                 *data_array = I2C_ReceiveData();
@@ -176,7 +185,7 @@ uint8_t i2c_mem_read_arr(uint16_t device_address, uint16_t mem_address_start, i2
 
                 /* Poll on BTF */
                 while ((I2C_GetFlagStatus(I2C_FLAG_TRANSFERFINISHED) == RESET)&& (--time_out));
-                if (!time_out) return 1;
+                if (!time_out) return 12;
 
                 /* Clear ACK */
                 I2C_AcknowledgeConfig(I2C_ACK_NONE);
@@ -203,7 +212,7 @@ uint8_t i2c_mem_read_arr(uint16_t device_address, uint16_t mem_address_start, i2
                 data_array++;
 
                 while ((I2C_GetFlagStatus(I2C_FLAG_RXNOTEMPTY) == RESET)&& (--time_out)); /* Poll on RxNE */
-                if (!time_out) return 1;
+                if (!time_out) return 13;
 
                 /* Read DataN */
                 *data_array = I2C_ReceiveData();
@@ -216,6 +225,7 @@ uint8_t i2c_mem_read_arr(uint16_t device_address, uint16_t mem_address_start, i2
     I2C_AcknowledgeConfig(I2C_ACK_CURR);
     return 0;
 }
+
 
 
 

@@ -37,9 +37,10 @@ int putchar(int c) {
  */
 int getchar(void) {
     int c = 0;
+    uint16_t time_out = 64535;
 
     /* Loop until the Read data register flag is SET */
-    while (UART3_GetFlagStatus(UART3_FLAG_RXNE) == RESET); /* wait until data arrived */
+    while ((UART3_GetFlagStatus(UART3_FLAG_RXNE) == RESET) && (--time_out)); /* wait until data arrived */
     c = UART3_ReceiveData8();
     return (c);
 }
