@@ -1,14 +1,15 @@
 ﻿# STM8 Interuptions
 
 ## Présentation 
-le programme proposé utilise le basic timer 4 qui est une minuterie de base et qui a un prescaler sélectionnable de 1 à 128 et un compteur 8 bits. L'objectif est d'obtenir une interruption toute les 1 ms. 
+le programme propose une fonction delay basée sur les interruptions. 
+Ce programme utilise le timer 4, une minuterie de base qui a un prescaler sélectionnable de 1 à 128 avec un compteur 8 bits. L'objectif est d'obtenir une interruption toute les 1 ms. 
 
 Pour la fréquence  de 16Mhz  il est nécessaire de configurer le prescaler à 128  et  la période à 124.
 ```c
     TIM4_TimeBaseInit(TIM4_PRESCALER_128, 124) 
 ```
 
-Veuillez noter que les codes qui utilisent les interruptions périphériques ont besoin des fichiers `stm8s_it.h` et  `stm8s_it.c` . Par conséquent, ajoutez-les à votre projet pour utiliser les interruptions.
+Veuillez noter que les codes qui utilisent les interruptions périphériques ont besoin des fichiers `stm8s_it.h` et  `stm8s_it.c`. 
 
 le fichier  **_stm8s_it.c_** contient le prototype de la fonction qui exécutera la routine de service d'interruption (ISR).
 
