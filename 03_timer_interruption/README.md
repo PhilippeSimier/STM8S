@@ -1,50 +1,60 @@
-﻿# STM8 Timer
+﻿# STM8 Interuptions
 
-Les timers du microcontrôleurs STM8S20 sont des périphériques  pour réaliser des temporisations.
-les microcontrôleurs de la famille STM8S20 possédent 4 timers.
+## Présentation 
+le programme proposé utilise le basic timer 4 qui est une minuterie de base et qui a un prescaler sélectionnable de 1 à 128 et un compteur 8 bits. L'objectif est d'obtenir une interruption toute les 1 ms. 
 
- - TIM1 - 16-bit advanced control timer
- - TIM2, TIM3 - 16-bit general purpose timers
- - TIM4 - 8-bit basic timer
-
-![Les timer](/03_timer/TIM_timer.png)
-
-##  Génération de durée
-
-La génération d'une durée repose sur le comptage d'un nombre requis de périodes élémentaires. 
-Ce nombre est fourni au temporisateur avant le démarrage du comptage. Lorsque le contenu du compteur a atteint ce nombre requis le temporisateur signale que la durée est écoulée et le contenu du compteur est remis à 0.
-La fréquence d'un STM8S207 est de 16MHz, avec un compteur de 16 bits cadencé par l'horloge principale, on pourrait compter jusqu'à 65536/16MHz soit une durée maximale de 4ms. Dans de nombreux cas cela est trop petit, on active alors un diviseur de fréquence ("prescaler") en entrée qui va permettre de diviser par une puissance de 2 la fréquence du signal entré dans le compteur.  Cette valeur du diviseur est définie dans un registre spécifique  du timer.
-
-## Exemple de calcul de la période
-
-Le STM8S20 possède un oscillateur interne avec une fréquence de 16 MHz. Par défaut, il est utilisé comme source d'horloge système avec le prédiviseur 1, ce qui signifie que la fréquence d'horloge système est de **16 MHz**. 
-
-Par défaut, le timer 2 fonctionne avec la même fréquence que le système.
-Supposons que nous voulions basculer la LED à chaque seconde et que nous utilisons le timer 2 pour identifier le moment où 1 seconde s'est écoulée.
-
-Chaque tick de l'horloge système a une période de 1/16 000 000 = 0,0000000625 seconde soit **0,0625 µs**.
-
-Si nous définissons 2048 comme prédiviseur pour le timer 2, le compteur du timer 2 s'incrémentera toutes les **128 µs** (0,0625 µs x 2048).
-
-Ainsi, 1 seconde se seront écoulé lorsque le compteur du timer atteindra  1 000 000/128 = **7812** .
-
-
-
-## Programme
+Pour la fréquence  de 16Mhz  il est nécessaire de configurer le prescaler à 128  et  la période à 124.
 ```c
-/**
- * @brief Active l'horloge du timer 2
- *      Configure le pré-diviseur, sur 2048
- *      Configure le retour à zero du compteur sur la valeur nb
- *      la periode d'une seconde correspond à 7812
- * @param nb la valeur maxi du compteur
- */
-void TIM2_setup(void) {
-    CLK_PeripheralClockConfig(CLK_PERIPHERAL_TIMER2, ENABLE);
-    TIM2_DeInit();
-    TIM2_TimeBaseInit(TIM2_PRESCALER_2048, 7812); 
-    TIM2_Cmd(ENABLE);
-}
+    TIM4_TimeBaseInit(TIM4_PRESCALER_128, 124) 
 ```
 
+Veuillez noter que les codes qui utilisent les interruptions périphériques ont besoin des fichiers `stm8s_it.h` et  `stm8s_it.c` . Par conséquent, ajoutez-les à votre projet pour utiliser les interruptions.
 
+le fichier  **_stm8s_it.c_** contient le prototype de la fonction qui exécutera la routine de service d'interruption (ISR).
+
+```c
+extern void delay_isr(void);
+```
+le fichier  **_stm8s_it.c_** contient aussi l'appel de cette fonction dans la macro INTERRUPT_HANDLER. 
+```c
+
+/**
+ * @brief  Timer4 Update/Overflow Interrupt routine
+ * @param None
+ * @retval
+ * None
+ */
+INTERRUPT_HANDLER(TIM4_UPD_OVF_IRQHandler, 23) {
+     delay_isr();
+}
+```
+Ainsi la fonction `delay_isr` est appelée toute les ms.
+Elle décrémente une variable globale time_keeper, puis réinitialise l'interruption.
+```c
+void delay_isr(void) {
+    if (TIM4_GetITStatus(TIM4_IT_UPDATE) == SET) {
+        if (time_keeper != 0) {
+            time_keeper--;
+        } else {
+            /* Disable Timer to reduce power consumption */
+            TIM4->CR1 &= (uint8_t) (~TIM4_CR1_CEN);
+        }
+        TIM4_ClearITPendingBit(TIM4_IT_UPDATE);
+    }
+}
+```
+## La fonction `delay_ms(time)`
+
+La fonction réinitialise la variable time_keeper, remet le compteur du timer à zéro, puis réactive le timer.
+enfin elle attend le retour à zéro de la variable time_keeper.
+
+```c
+void delay_ms(uint32_t time) {
+    
+    time_keeper = time;
+    TIM4->CNTR = (uint8_t) (0); /* Reset Counter Register value */    
+    TIM4->CR1 |= TIM4_CR1_CEN; /* Enable Timer */
+
+    while (time_keeper);
+}
+```

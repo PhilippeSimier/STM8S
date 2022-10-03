@@ -5,6 +5,10 @@
       <df name="include">
       </df>
       <df name="lib">
+        <df name="Delay">
+          <in>Delay.c</in>
+          <in>Delay.h</in>
+        </df>
         <df name="Serial">
           <in>Serial.c</in>
           <in>Serial.h</in>
