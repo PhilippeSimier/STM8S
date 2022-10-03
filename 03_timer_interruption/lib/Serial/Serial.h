@@ -16,8 +16,6 @@ int  putchar (int c);
 int  getchar (void);
 
 
-void delay_ms   (uint32_t nb);
-
 
 #ifdef USE_FULL_ASSERT
 void assert_failed(uint8_t* file, uint32_t line);

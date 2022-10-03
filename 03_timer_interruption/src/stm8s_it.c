@@ -26,13 +26,11 @@
  */
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm8s.h"
 #include "stm8s_it.h"
 
-void TIM2_UPD_IRQHandler(void) {
-    GPIO_WriteReverse(GPIOC, GPIO_PIN_5);
-    TIM2_ClearFlag(TIM2_FLAG_UPDATE);
-}
+extern void delay_isr(void);
+
+
 /** @addtogroup UART1_Printf
  * @{
  */
@@ -480,9 +478,7 @@ INTERRUPT_HANDLER(TIM6_UPD_OVF_TRG_IRQHandler, 23) {
  * None
  */
 INTERRUPT_HANDLER(TIM4_UPD_OVF_IRQHandler, 23) {
-    /* In order to detect unexpected events during development,
-       it is recommended to set a breakpoint on the following instruction.
-     */
+     delay_isr();
 }
 #endif /*STM8S903*/
 

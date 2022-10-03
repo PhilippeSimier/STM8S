@@ -45,22 +45,6 @@ int getchar(void) {
 }
 
 
-/* @Brief  :   Delay function
- * @Param  :   Time to delay (millis seconds)
- * @Return :   None
- * @Note   :   None
- */
-void delay_ms(uint32_t nb) {
-
-    for (uint32_t i = 0; i < nb; i++) {
-        // simple wait ~1ms @ 16MHz
-        for (uint32_t j = 0; j < 1600L; j++)
-            __asm__("nop");
-    }
-}
-
-
-
 /**
  * @brief  Reports the name of the source file and the source line number
  *   where the assert_param error has occurred.
