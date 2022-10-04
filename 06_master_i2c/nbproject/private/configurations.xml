@@ -11,6 +11,8 @@
         </df>
       </df>
       <df name="src">
+        <in>BH1750.c</in>
+        <in>BH1750.h</in>
         <in>main.c</in>
         <in>stm8s_conf.h</in>
       </df>
