@@ -35,11 +35,16 @@ uint8_t i2c_mem_read_arr(uint16_t device_address, uint16_t mem_address_start,
 uint8_t receive_data[200];
 
 void main(void) {
+    
+    CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1);
+    CLK_SYSCLKConfig(CLK_PRESCALER_CPUDIV1);
+    
 
     begin(115200);
     i2c_master_init();
 
     printf("\r\n Programme test I2C");
+    printf("\r\n%d\r\n", CLK_GetClockFreq());
     uint8_t ret;
 
     while (1) {
@@ -64,28 +69,30 @@ void i2c_master_init(void) {
 
 
     //define SDA, SCL outputs, HiZ, Open drain, Fast
-    GPIO_Init(I2C_PORT, ((GPIO_Pin_TypeDef) (SCL_pin | SDA_pin)), GPIO_MODE_OUT_OD_HIZ_FAST);
+    GPIO_Init(GPIOB, GPIO_PIN_4, GPIO_MODE_OUT_OD_HIZ_FAST); //SCL
+    GPIO_Init(GPIOB, GPIO_PIN_5, GPIO_MODE_OUT_OD_HIZ_FAST); //SDA
 
-    I2C_Cmd(ENABLE); /* Enable I2C Module */
+    
     /* I2C configuration after enabling it */
     I2C_Init(100000, // SCL 100 Khz
-            0x50, // Sans importance parce que c'est le Maître
+            0xA0, // OwnAddress, egal
             I2C_DUTYCYCLE_2,
             I2C_ACK_CURR,
             I2C_ADDMODE_7BIT,
-            16 // Supply Frequency = 16Mhz = FCPU
+            16 // InputClockFreqencyMhz
             );
+    I2C_Cmd(ENABLE); /* Enable I2C Module */
 
-    
 }
 
 uint8_t i2c_mem_read_arr(uint16_t device_address, uint16_t mem_address_start, i2c_memory_address_size I2C_MEMORY_ADDRESS_SIZE_X, uint8_t* data_array, uint16_t NumByteToRead) {
 
-    uint16_t time_out = 65535;
+    uint16_t time_out = 50;
 
     /* If I2C bus is busy wait until it is free */
+
     while (I2C_GetFlagStatus(I2C_FLAG_BUSBUSY)&& (--time_out));
-    if (!time_out) return 1;
+    if (!time_out) return 22;
 
     /* Send Start Condition then wait event EV5 */
     I2C_GenerateSTART(ENABLE);

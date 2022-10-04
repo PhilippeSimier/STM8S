@@ -6,7 +6,7 @@
  */
 void begin(uint32_t baudrate) {
 
-    CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1);
+    CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV8);
 
     UART3_DeInit();
     UART3_Init(baudrate,
