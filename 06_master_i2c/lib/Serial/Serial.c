@@ -72,9 +72,9 @@ void delay_ms(uint32_t nb) {
 void assert_failed(uint8_t* file, uint32_t line) {
     /* User can add his own implementation to report the file name and line number,
        ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-    (void) file;
-    (void) line;
-    /* Infinite loop */
+
+    printf("assert_failed file %s", file);
+    printf("assert_failed file %d", line);
     while (1) {
     }
 }

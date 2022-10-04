@@ -44,7 +44,7 @@ void main(void) {
     i2c_master_init();
 
     printf("\r\n Programme test I2C");
-    printf("\r\n%d\r\n", CLK_GetClockFreq());
+    printf("\r\n%u\r\n", CLK_GetClockFreq());
     uint8_t ret;
 
     while (1) {
@@ -74,7 +74,7 @@ void i2c_master_init(void) {
 
     
     /* I2C configuration after enabling it */
-    I2C_Init(100000, // SCL 100 Khz
+    I2C_Init(50000, // SCL 100 Khz
             0xA0, // OwnAddress, egal
             I2C_DUTYCYCLE_2,
             I2C_ACK_CURR,
