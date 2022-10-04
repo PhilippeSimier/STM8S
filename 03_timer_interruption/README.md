@@ -1,14 +1,25 @@
 ﻿# STM8 Interuptions
 
 ## Présentation 
-le programme propose une fonction delay basée sur les interruptions. 
-Ce programme utilise le timer 4, une minuterie de base qui a un prescaler sélectionnable de 1 à 128 avec un compteur 8 bits. L'objectif est d'obtenir une interruption toute les 1 ms. 
+Dans notre projet initial **01_blink_led**, nous avons utilisé une simple boucle de retard. Cela a l'avantage d'être rapide à mettre en place mais cela présente quelques inconvénients.
 
+-   Le code est sensible au temps, si nous effectuons d'autres tâches, la LED clignotera à des rythmes différents.
+-   On ne peut rien faire d'autre en attendant.
+
+Ce projet propose une fonction delay basée sur les interruptions. 
+Le programme utilise le timer 4, une minuterie de base qui a un prescaler sélectionnable de 1 à 128 avec un compteur 8 bits. L'objectif est d'obtenir une interruption toute les 1 ms. 
+
+## Configuration du timer
 Pour la fréquence  de 16Mhz  il est nécessaire de configurer le prescaler à 128  et  la période à 124.
 ```c
     TIM4_TimeBaseInit(TIM4_PRESCALER_128, 124) 
 ```
-
+Nous configurons aussi le temporisateur pour générer une interruption à chaque fois que le temporisateur est rechargé.
+```c
+    TIM4_ITConfig(TIM4_IT_UPDATE, ENABLE);
+    enableInterrupts();
+```
+Notez l'appel à `enableInterrupts` qui active les interruptions dans le CPU, sans elle notre interruption ne se produira pas.
 Veuillez noter que les codes qui utilisent les interruptions périphériques ont besoin des fichiers `stm8s_it.h` et  `stm8s_it.c`. 
 
 le fichier  **_stm8s_it.c_** contient le prototype de la fonction qui exécutera la routine de service d'interruption (ISR).
@@ -16,7 +27,7 @@ le fichier  **_stm8s_it.c_** contient le prototype de la fonction qui exécutera
 ```c
 extern void delay_isr(void);
 ```
-le fichier  **_stm8s_it.c_** contient aussi l'appel de cette fonction dans la macro INTERRUPT_HANDLER. 
+le fichier  **_stm8s_it.c_** contient aussi  la configuration  du vecteur d'interruption. le temporisateur 4 est sur l'irq 23.
 ```c
 
 /**
@@ -29,8 +40,9 @@ INTERRUPT_HANDLER(TIM4_UPD_OVF_IRQHandler, 23) {
      delay_isr();
 }
 ```
-Ainsi la fonction `delay_isr` est appelée toute les ms.
-Elle décrémente une variable globale time_keeper, puis réinitialise l'interruption.
+Ainsi configuré, la fonction `delay_isr` est appelée toute les ms pour décrémenter la variable `time_keeper`.
+
+Lorsque time_keeper est revenu à zéro, le temporisateur  est désactivé pour économiser la consommation.
 ```c
 void delay_isr(void) {
     if (TIM4_GetITStatus(TIM4_IT_UPDATE) == SET) {
@@ -38,7 +50,7 @@ void delay_isr(void) {
             time_keeper--;
         } else {
             /* Disable Timer to reduce power consumption */
-            TIM4->CR1 &= (uint8_t) (~TIM4_CR1_CEN);
+            TIM4_Cmd(DISABLE);
         }
         TIM4_ClearITPendingBit(TIM4_IT_UPDATE);
     }
@@ -53,9 +65,8 @@ enfin elle attend le retour à zéro de la variable time_keeper.
 void delay_ms(uint32_t time) {
     
     time_keeper = time;
-    TIM4->CNTR = (uint8_t) (0); /* Reset Counter Register value */    
-    TIM4->CR1 |= TIM4_CR1_CEN; /* Enable Timer */
-
+    TIM4_SetCounter(0);  // Reset Counter Register value
+    TIM4_Cmd(ENABLE);    // Enable Timer
     while (time_keeper);
 }
 ```

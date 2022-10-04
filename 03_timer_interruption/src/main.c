@@ -22,17 +22,15 @@ void main(void) {
     clock_setup();
     GPIO_setup();
     delay_setup();
-
+    serial_setup(115200);
+    
     int i = 0;
-
-    begin(115200);
-
     printf("\r\nProgramme Exemple Timer 4 interuption\r\n");
 
     //la led s'allume et s'éteint toutes les secondes
     while (1) {
 
-        //test du timer
+        //test du timer4
         delay_ms(1000);
         printf("%d\r\n", i++);
         GPIO_WriteReverse(GPIOC, GPIO_PIN_5);

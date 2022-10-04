@@ -4,7 +4,7 @@
  * @brief initialise l'uart3 
  * @param baudrate Le taux de transmission
  */
-void begin(uint32_t baudrate) {
+void serial_setup(uint32_t baudrate) {
 
     CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1);
 
