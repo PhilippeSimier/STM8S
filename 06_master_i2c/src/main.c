@@ -10,6 +10,7 @@
 
 
 #include <stm8s_conf.h>
+#include <stm8s_i2c.h>
 #include <Serial.h>
 #include "BH1750.h"
 
@@ -19,19 +20,21 @@ void I2C_setup(void);
 
 #define   BH1750_addr    0x46
 
-
-
 void main(void) {
-    
+
     unsigned int tmp = 0x0000;
-    
+
     clock_setup();
     GPIO_setup();
     I2C_setup();
-    
+
     begin(115200);
- 
+
     printf("\r\n Programme test I2C\r\n");
+    
+  
+    printf("%d\n", (uint16_t)(CLK_GetClockFreq() / 10000)); // for positive values
+    
     BH1750_init();
 
 
@@ -56,7 +59,7 @@ void clock_setup(void) {
 
     CLK_ClockSwitchCmd(ENABLE);
     CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1); // HSI à 16 MHz
-    CLK_SYSCLKConfig(CLK_PRESCALER_CPUDIV1);       // soit CPU à 16Mhz
+    CLK_SYSCLKConfig(CLK_PRESCALER_CPUDIV1); // soit CPU à 16Mhz
 
     CLK_ClockSwitchConfig(CLK_SWITCHMODE_AUTO, CLK_SOURCE_HSI,
             DISABLE, CLK_CURRENTCLOCKSTATE_ENABLE);
@@ -72,23 +75,29 @@ void clock_setup(void) {
 }
 
 void GPIO_setup(void) {
-    GPIO_DeInit(GPIOB);
-    GPIO_Init(GPIOB, GPIO_PIN_4, GPIO_MODE_OUT_OD_HIZ_FAST);
-    GPIO_Init(GPIOB, GPIO_PIN_5, GPIO_MODE_OUT_OD_HIZ_FAST);
-    GPIO_WriteHigh(GPIOB, GPIO_PIN_4);
-    GPIO_WriteHigh(GPIOB, GPIO_PIN_5);
+    /*GPIO_DeInit(GPIOB);
+   
+   GPIO_Init(GPIOB, GPIO_PIN_4, GPIO_MODE_OUT_OD_HIZ_FAST);
+   GPIO_Init(GPIOB, GPIO_PIN_5, GPIO_MODE_OUT_OD_HIZ_FAST);
+   GPIO_WriteHigh(GPIOB, GPIO_PIN_4);
+   GPIO_WriteHigh(GPIOB, GPIO_PIN_5);*/
 }
 
 void I2C_setup(void) {
+
+    I2C_SoftwareResetCmd(ENABLE);
+    I2C_SoftwareResetCmd(DISABLE);
+    I2C_Cmd(DISABLE);
     I2C_DeInit();
-    I2C_Init(10000,
-            BH1750_addr,
+    I2C_Cmd(ENABLE);
+    I2C_Init(I2C_MAX_STANDARD_FREQ,
+            0x00,
             I2C_DUTYCYCLE_2,
             I2C_ACK_CURR,
             I2C_ADDMODE_7BIT,
-            16);
-    
-    I2C_Cmd(ENABLE);
+            20
+            );
+    I2C_AcknowledgeConfig(I2C_ACK_CURR);
 }
 
 
