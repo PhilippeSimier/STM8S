@@ -9,6 +9,8 @@ Dans notre projet initial **01_blink_led**, nous avons utilisé une simple boucl
 Ce projet propose une **fonction delay basée sur les interruptions**. 
 Le programme utilise le timer 4, une minuterie de base qui a un prescaler sélectionnable de 1 à 128 avec un compteur 8 bits. L'objectif est d'obtenir une interruption toute les 1 ms. 
 
+![Les timer](/03_timer/TIM_timer.png)
+
 ## Configuration du timer
 
 La génération d'une durée repose sur le comptage d'un nombre requis de périodes élémentaires. Ce nombre est fourni au temporisateur avant le démarrage du comptage. Lorsque le contenu du compteur atteint ce nombre requis le temporisateur génère une interruption et le contenu du compteur est remis à 0.
@@ -80,5 +82,21 @@ void delay_ms(uint32_t time) {
 }
 ```
 ## Test mesure de la période
+Le programme de test génére un signal carré de période 200ms.
+```c
+void main(void) {
 
+    clock_setup();
+    GPIO_setup();
+    delay_setup();
+    serial_setup(115200);
+
+    printf("\r\nProgramme Exemple Timer 4 interuption\r\n");
+    while (1) {
+        delay_ms(100);
+        GPIO_WriteReverse(GPIOC, GPIO_PIN_5);
+    }
+}
+```
+Le signal obtenu sur l'écran de l'oscilloscope
 ![Les timer](/03_timer_interruption/SDS00002.png)
