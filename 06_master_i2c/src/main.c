@@ -74,17 +74,18 @@ void clock_setup(void) {
     CLK_PeripheralClockConfig(CLK_PERIPHERAL_TIMER4, DISABLE);
 }
 
+//define SDA, SCL outputs, HiZ, Open drain, Fast
 void GPIO_setup(void) {
-    /*GPIO_DeInit(GPIOB);
+    GPIO_DeInit(GPIOB);
    
    GPIO_Init(GPIOB, GPIO_PIN_4, GPIO_MODE_OUT_OD_HIZ_FAST);
    GPIO_Init(GPIOB, GPIO_PIN_5, GPIO_MODE_OUT_OD_HIZ_FAST);
    GPIO_WriteHigh(GPIOB, GPIO_PIN_4);
-   GPIO_WriteHigh(GPIOB, GPIO_PIN_5);*/
+   GPIO_WriteHigh(GPIOB, GPIO_PIN_5);
 }
 
 void I2C_setup(void) {
-
+/**
     I2C_SoftwareResetCmd(ENABLE);
     I2C_SoftwareResetCmd(DISABLE);
     I2C_Cmd(DISABLE);
@@ -98,6 +99,20 @@ void I2C_setup(void) {
             20
             );
     I2C_AcknowledgeConfig(I2C_ACK_CURR);
+ */
+ 
+  I2C->FREQR = 8;                // input clock to I2C - 8MHz
+  I2C->CCRL = 40;                // CCR= 40 - (SCLhi must be at least 4000+1000=5000ns!)
+  I2C->CCRH = 0;                 // standard mode, duty 1/1 bus speed 100kHz
+  I2C->TRISER = 9;               // 1000ns/(125ns) + 1  (maximum 1000ns)
+  I2C->OARL = 0xA0;              // own address A0;
+  I2C->OARH |= 0x40;
+  I2C->ITR = 1;                  // enable error interrupts
+  I2C->CR2 |= 0x04;              // ACK=1, Ack enable
+  I2C->CR1 |= 0x01;              // PE=1 
+    
+    
+    
 }
 
 

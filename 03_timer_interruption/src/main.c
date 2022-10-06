@@ -31,8 +31,8 @@ void main(void) {
     while (1) {
 
         //test du timer4
-        delay_ms(1000);
-        printf("%d\r\n", i++);
+        delay_ms(100);
+        //printf("%d\r\n", i++);
         GPIO_WriteReverse(GPIOC, GPIO_PIN_5);
     }
 }

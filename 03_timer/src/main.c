@@ -25,7 +25,7 @@ void main(void) {
 
     clock_setup();
     GPIO_setup();
-    TIM2_setup(7048); 
+    TIM2_setup(7812); 
 
     begin(115200);
   

@@ -6,13 +6,22 @@ Dans notre projet initial **01_blink_led**, nous avons utilisé une simple boucl
 -   Le code est sensible au temps, si nous effectuons d'autres tâches, la LED clignotera à des rythmes différents.
 -   On ne peut rien faire d'autre en attendant.
 
-Ce projet propose une fonction delay basée sur les interruptions. 
+Ce projet propose une **fonction delay basée sur les interruptions**. 
 Le programme utilise le timer 4, une minuterie de base qui a un prescaler sélectionnable de 1 à 128 avec un compteur 8 bits. L'objectif est d'obtenir une interruption toute les 1 ms. 
 
 ## Configuration du timer
-Pour la fréquence  de 16Mhz  il est nécessaire de configurer le prescaler à 128  et  la période à 124.
+
+La génération d'une durée repose sur le comptage d'un nombre requis de périodes élémentaires. Ce nombre est fourni au temporisateur avant le démarrage du comptage. Lorsque le contenu du compteur atteint ce nombre requis le temporisateur génère une interruption et le contenu du compteur est remis à 0.
+
+Le STM8S20 possède un oscillateur interne avec une fréquence de 16 MHz. Chaque tick de l'horloge système a une période de 1/16 000 000 = 0,0000000625 seconde soit **0,0625 µs**.
+
+Si nous définissons 64 comme prédiviseur pour le timer 4, le compteur du timer 4 s'incrémentera toutes les **0,0625  x 64 = 4 µs**.
+
+Ainsi, 1 ms se sera écoulé lorsque le compteur du timer atteindra 1 000 / 4 = **250** .
+
+Pour conclure il faut configurer le prescaler à 64  et  la période à 249. Nous laissons 4 µs à la fonction ISR pour s’exécuter. 
 ```c
-    TIM4_TimeBaseInit(TIM4_PRESCALER_128, 124) 
+    TIM4_TimeBaseInit(TIM4_PRESCALER_64, 249) 
 ```
 Nous configurons aussi le temporisateur pour générer une interruption à chaque fois que le temporisateur est rechargé.
 ```c
@@ -70,3 +79,6 @@ void delay_ms(uint32_t time) {
     while (time_keeper);
 }
 ```
+## Test mesure de la période
+
+![Les timer](/03_timer_interruption/SDS00002.png)

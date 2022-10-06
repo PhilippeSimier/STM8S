@@ -47,4 +47,6 @@ void TIM2_setup(void) {
 }
 ```
 
+## Test mesure de la période
 
+![Les timer](/03_timer/SDS00001.png)
