@@ -15,9 +15,16 @@ void main(void) {
 
     begin(115200);
 
-    printf("\n Serial  Example \n\r retarget the C library printf()/getchar() functions to the UART3\r\n");
+    printf("\n Serial\n\r retarget the C library printf()/getchar() functions to the UART3\r\n");
+    
+    float pi=3.1415f;
+    
+    float teta = 2.0 * pi;
+    printf("2 PI = ");
+    print_float(teta);
+    printf("\r\n");
 
-    int i = 0;
+    int16_t i = 32760;
 
     while (1) {
         i++;
@@ -29,7 +36,8 @@ void main(void) {
         /* you may also use blocking getchar() to get input */
         char ans = getchar();
         printf("%c", ans);
-        printf(" Code Ascii 0x%X\r\n", ans);       
+        printf(" Code Ascii 0x%X\r\n", ans); 
+        
     }
 }
 
