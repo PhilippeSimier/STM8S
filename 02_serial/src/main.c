@@ -13,7 +13,7 @@
 
 void main(void) {
 
-    begin(115200);
+    serial_setup(115200);
 
     printf("\n Serial\n\r retarget the C library printf()/getchar() functions to the UART3\r\n");
     

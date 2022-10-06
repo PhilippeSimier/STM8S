@@ -11,7 +11,7 @@
 #include <stm8s_conf.h>
 #include "stdio.h"
 
-void begin   (uint32_t baudrate);
+void serial_setup   (uint32_t baudrate);
 int  putchar (int c);
 int  getchar (void);
 
