@@ -11,6 +11,9 @@ Le programme utilise le timer 4, une minuterie de base qui a un prescaler sélec
 
 ![Les timer](/03_timer/TIM_timer.png)
 
+Lorsqu'une interruption se produit dans le code, le microcontrôleur arrête immédiatement d'exécuter le code qu'il exécute et commence à exécuter une routine d'interruption à la place. Il est important que l'environnement de la fonction interrompue soit restauré après le traitement de l'interruption (cela inclut les valeurs des registres du processeur et le registre d'état du processeur). Cela permet de poursuivre l'exécution du code d'origine après l'exécution du code qui a géré l'interruption.
+Le microcontrôleur STM8 prend en charge de nombreuses sources d'interruption. Pour chaque source d'interruption, une routine d'interruption peut être écrite. Chaque routine d'interruption est associée à un numéro de vecteur, qui est spécifié dans la documentation du microcontrôleur STM8 du fabricant de la puce.
+
 ## Configuration du timer
 
 La génération d'une durée repose sur le comptage d'un nombre requis de périodes élémentaires. Ce nombre est fourni au temporisateur avant le démarrage du comptage. Lorsque le contenu du compteur atteint ce nombre requis le temporisateur génère une interruption et le contenu du compteur est remis à 0.
@@ -67,6 +70,8 @@ void delay_isr(void) {
     }
 }
 ```
+*Remarque : Une fonction d'interruption ISR doit avoir le type de retour void et elle ne doit spécifier aucun paramètre.*
+
 ## La fonction `delay_ms(time)`
 
 La fonction réinitialise la variable time_keeper, remet le compteur du timer à zéro, puis réactive le timer.
@@ -81,7 +86,7 @@ void delay_ms(uint32_t time) {
     while (time_keeper);
 }
 ```
-## Test mesure de la période
+## Test du programme 
 Le programme de test génére un signal carré de période 200ms.
 ```c
 void main(void) {
@@ -98,5 +103,5 @@ void main(void) {
     }
 }
 ```
-Le signal obtenu sur l'écran de l'oscilloscope
+Le signal obtenu sur l'écran de l'oscilloscope montre que le signal correspond à l'attendu.
 ![Les timer](/03_timer_interruption/SDS00002.png)
