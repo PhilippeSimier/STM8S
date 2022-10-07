@@ -21,15 +21,16 @@ void main(void) {
     
     float teta = 2.0 * pi;
     printf("2 PI = ");
-    print_float(teta);
+    printf("%F", teta);
     printf("\r\n");
 
     
-    int32_t i = 32760;
+    int i = 32760;  // int sur 16 bits
+    char buffer[100];
 
     while (1) {
         i++;
-        printf("%3d", (uint16_t)i);
+        printf("%d", i);
         printf(" Entrer un caractère!\r\n");
 
         delay_ms(2);
@@ -38,6 +39,12 @@ void main(void) {
         char ans = getchar();
         printf("%c", ans);
         printf(" Code Ascii 0x%X\r\n", ans); 
+        
+        printf("Entrer un message!\r\n");
+        serial_gets(buffer,100);
+        printf("\r\n%s\r\n", buffer);
+        
+        
         
     }
 }

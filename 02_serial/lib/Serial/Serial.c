@@ -37,14 +37,13 @@ int putchar(int c) {
  */
 int getchar(void) {
     int c = 0;
-    
+
 
     /* Loop until the Read data register flag is SET */
     while ((UART3_GetFlagStatus(UART3_FLAG_RXNE) == RESET)); /* wait until data arrived */
     c = UART3_ReceiveData8();
     return (c);
 }
-
 
 /* @Brief  :   Delay function
  * @Param  :   Time to delay (millis seconds)
@@ -59,16 +58,17 @@ void delay_ms(uint32_t nb) {
             __asm__("nop");
     }
 }
+
 /**
  * 
  * @param f
  * @return char *
  */
-void print_float (float f){
-    
+void print_float(float f) {
+
     int i = (int) (f * 1000.0f);
     printf("%d.%03d\n", i / 1000, i % 1000); // for positive values
-    
+
 }
 
 
@@ -81,6 +81,7 @@ void print_float (float f){
  * @retval None
  */
 #ifdef USE_FULL_ASSERT
+
 void assert_failed(uint8_t* file, uint32_t line) {
     /* User can add his own implementation to report the file name and line number,
        ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
@@ -92,3 +93,50 @@ void assert_failed(uint8_t* file, uint32_t line) {
 }
 #endif
 
+/**
+ * @brief This function returns a string of maximum length 
+ * @param buf to store string; <len> maximum number of characters to read;
+ * @param len   must be 2 or greater.
+ * @return Pointer to string containing buffer read from UART.
+ */
+char* serial_gets(char *buf, uint32_t len) {
+    unsigned char temp;
+    unsigned char i;
+    unsigned char done;
+
+    done = FALSE;
+    i = 0;
+
+    while (done == FALSE) {
+        temp = getchar();
+
+        if (temp == '\b') {
+            if (i != 0) // backspace if possible
+            {
+                i = i - 1;
+                putchar('\b');
+            }
+        } else
+            if (temp == '\r') // handle newline
+        {
+            buf[i] = '\0'; // add null terminator to string
+            done = TRUE;
+        } else
+            if (temp == '\0') // handle EOF
+        {
+            buf[i] = '\0'; // add null terminator to string
+        } else // handle new character
+        {
+            buf[i] = temp;
+            putchar(temp); // echo character
+            i = i + 1;
+            if (i == (len - 1)) {
+                buf[i] = '\0';
+                done = TRUE;
+            }
+        }
+    }
+
+    return buf;
+
+}

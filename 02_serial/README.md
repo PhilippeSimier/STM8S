@@ -1,7 +1,9 @@
-﻿# STM8S
+﻿# STM8S Serial
 
 ## Introduction
-Cet exemple montre comment rediriger les fonctions `printf/getchar` de la bibliothèque C vers l'UART3 . Le programme proposé génère un message avec `printf` sur le terminal à l'aide de l'UART3 et continue d'attendre qu'un caractère soit saisi par l'utilisateur.
+Vous devez fournir vos propres fonctions getchar()et putchar(). en effet SDCC (Small Device C Compiler) ne sait pas si le système se connecte à une ligne série.
+
+Cet exemple montre comment rediriger les fonctions `putchar et getchar` de la bibliothèque  vers l'UART3 . Le programme proposé génère un message avec `printf` sur le terminal à l'aide de l'UART3 et continue d'attendre qu'un caractère soit saisi par l'utilisateur.
 
 L'UART3 est configuré comme suit :
 
@@ -37,13 +39,15 @@ La troisième ligne affiche  `valeur entière : 0`
 Conclusion la fonction `printf` est limité aux entiers stockés sur 16 bits. 
 
 ### Afficher un float
+l' implémentation  de printf() par défaut  ne prend pas en charge le type `float`
+
 ```c
 	float f = 12.345f;
     printf("valeur  : %f\r\n", f);
 ```
 Affiche sur le terminal
 `valeur  : <NO FLOAT>`
-`printf` n'affiche pas les `float`
+
 
 Une solution convertir la variable de type `float` en `int` puis afficher la valeur entière et la partie fractionnaire.
 ```c
