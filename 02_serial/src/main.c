@@ -24,11 +24,12 @@ void main(void) {
     print_float(teta);
     printf("\r\n");
 
-    int16_t i = 32760;
+    
+    int32_t i = 32760;
 
     while (1) {
         i++;
-        printf("%3d", i);
+        printf("%3d", (uint16_t)i);
         printf(" Entrer un caractère!\r\n");
 
         delay_ms(2);
