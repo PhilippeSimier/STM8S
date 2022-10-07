@@ -87,7 +87,27 @@ framework = spl
 
 ## Programmation
 
-La carte se programme en langage C. *(A ma connaissance le langage C++ n'est pas supporté).*
+
+La carte se programme en langage C. Il existe actuellement plusieurs compilateurs C ciblant le STM8.  Les compilateurs utilisable sont
+
+ - Cosmique
+ - **SDCC**
+ - Raisonnance
+ - RIA
+
+*Notez que platformIO installe le compilateur SDCC.*
+Le **compilateur sdcc** _C_ , écrit à l'origine par Sandeep Dutta. 
+
+Certaines des fonctionnalités incluent :
+
+ 1. une gamme complète de types de données : **char** ( _8_ bits, 1
+    octet), **short** ( _16_ bits, 2 octets), **int** ( _16_ bits, 2
+    octets), **long** ( _32_ bits, 4 octets), **long long** ( _64_ bits,
+    8 octets), **float** (4 octets IEEE) et **_Bool** / **bool** .
+ 2.   la possibilité d'ajouter du code assembleur en ligne n'importe où dans une fonction.
+ 
+ [La documentation de SDCC](https://sdcc.sourceforge.net/doc/sdccman.pdf) 
+ 
 Le programme doit impérativement contenir la définition d'une fonction `assert_failed` afin de gérer les assertions. 
 ```c
 void assert_failed(uint8_t* file, uint32_t line) {
