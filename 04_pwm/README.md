@@ -65,3 +65,7 @@ Pour changer le rapport cyclique PWM, nous devons appeler la fonction suivante :
     TIM2_SetCompare3(pwm_duty);	  // pour le canal 3
 ```
 Notez que dans les micros STM8, il existe un compromis entre le rapport cyclique et la fréquence PWM. Si la résolution PWM, c'est-à-dire le rapport cyclique est grand, alors la fréquence PWM est petite et vice-versa. Ceci est vrai pour toutes les minuteries.
+
+## Chronogramme
+
+![timer 2](/04_pwm/SDS00003.png)
