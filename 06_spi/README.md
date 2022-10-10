@@ -66,14 +66,14 @@ void spi_write(unsigned char address, unsigned char value) {
 
 ## Chronogrammes 
 
-Il existe donc **4 modes de transmission** différents (voir tableau ci-dessous). Pour une transmission correcte il faut que ces paramètres soient réglés de la même manière pour tous les composants reliés au bus.
+Il existe **4 modes de transmission** différents (voir tableau ci-dessous). Pour une transmission correcte il faut que ces paramètres soient réglés de la même manière pour tous les composants reliés au bus.
 
 |Mode SPI|CPOL|CPHA|
-|--|--|--|--|
-| **0**  |0  |0 |
-| **1**  |0  |1 |
-| **2**  |1  |0 |
-| **3**  |1  |1 |
+|--------|----|----|
+| **0**  | 0  |  0 |
+| **1**  | 0  |  1 |
+| **2**  | 1  |  0 |
+| **3**  | 1  |  1 |
 
  - **CPOL** détermine si au repos l’horloge est au niveau BAS (CPOL=0) ou HAUT (CPOL=1)
  - **CPHA** détermine à quel front de l’horloge les données sont transmises. CPHA=0 les données sont valides au **premier front** d’horloge, CPHA=1 elles sont valides au **deuxième front**.
