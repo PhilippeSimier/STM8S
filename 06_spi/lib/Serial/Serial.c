@@ -87,7 +87,7 @@ void assert_failed(uint8_t* file, uint32_t line) {
        ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
 
     printf("assert_failed file %s", file);
-    printf("assert_failed file %d", line);
+    printf("assert_failed line %d", line);
     while (1) {
     }
 }

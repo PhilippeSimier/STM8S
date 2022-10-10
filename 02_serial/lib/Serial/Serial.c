@@ -99,7 +99,7 @@ void assert_failed(uint8_t* file, uint32_t line) {
  * @param len   must be 2 or greater.
  * @return Pointer to string containing buffer read from UART.
  */
-char* serial_gets(char *buf, uint32_t len) {
+char* gets(char *buf, uint32_t len) {
     unsigned char temp;
     unsigned char i;
     unsigned char done;

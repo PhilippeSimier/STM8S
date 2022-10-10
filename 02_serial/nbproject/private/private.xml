@@ -6,6 +6,11 @@
     </data>
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/home/philippe/github/STM8S207/02_serial/src/main.c</file>
+            <file>file:/home/philippe/github/STM8S207/02_serial/lib/Serial/Serial.c</file>
+            <file>file:/home/philippe/github/STM8S207/02_serial/lib/Serial/Serial.h</file>
+            <file>file:/home/philippe/github/STM8S207/02_serial/platformio.ini</file>
+        </group>
     </open-files>
 </project-private>

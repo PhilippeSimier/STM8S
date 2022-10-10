@@ -25,13 +25,13 @@ void main(void) {
     printf("\r\n");
 
     
-    int i = 32760;  // int sur 16 bits
+    int8_t i = 126;  // int sur 8 bits
     char buffer[100];
 
     while (1) {
         i++;
-        printf("%d", i);
-        printf(" Entrer un caractère!\r\n");
+        printf("%d\r\n", i);
+        printf("Entrer un caractère!\r\n");
 
         delay_ms(2);
 
@@ -41,7 +41,7 @@ void main(void) {
         printf(" Code Ascii 0x%X\r\n", ans); 
         
         printf("Entrer un message!\r\n");
-        serial_gets(buffer,100);
+        gets(buffer,100);
         printf("\r\n%s\r\n", buffer);
         
         

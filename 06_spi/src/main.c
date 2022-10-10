@@ -31,23 +31,22 @@ void main(void) {
     while (1) {
         //test du spi
         spi_write(0xa0, 0x36);
-        delay_ms(100);
+        delay_ms(10);
         printf("\r\n send %d\r\n", i++);
     }
 }
 
 void GPIO_setup()
  {
-    //GPIO_PinRemapConfig();
-    //GPIO_PinRemapConfig(GPIO_Remap_I2C1, ENABLE) ; 
+ 
     GPIO_DeInit(GPIOA);
     GPIO_DeInit(GPIOB);
     GPIO_DeInit(GPIOC);
     GPIO_DeInit(GPIOD);
     
-    GPIO_Init(GPIOC, ((GPIO_Pin_TypeDef)GPIO_PIN_5 | GPIO_PIN_6),GPIO_MODE_OUT_PP_HIGH_FAST);  // PC5 -> led et PC6 -> MOSI
-    GPIO_Init(CS_port, CS_pin, GPIO_MODE_OUT_PP_HIGH_FAST); // CS  -> PC4
-    GPIO_Init(GPIOC, GPIO_PIN_7, GPIO_MODE_IN_PU_NO_IT);    // PC7 -> MISO 
+    GPIO_Init(GPIOC, ((GPIO_Pin_TypeDef)GPIO_PIN_5 | GPIO_PIN_6),GPIO_MODE_OUT_PP_HIGH_FAST);  //Sorties  PC5 -> CLK et PC6 -> MOSI
+    GPIO_Init(CS_port, CS_pin, GPIO_MODE_OUT_PP_HIGH_FAST); // Sortie CS  -> PC4 
+    GPIO_Init(GPIOC, GPIO_PIN_7, GPIO_MODE_IN_PU_NO_IT);    // Entrée PC7 -> MISO 
 }
 
 void clock_setup() 
@@ -60,15 +59,10 @@ void clock_setup()
       while(CLK_GetFlagStatus(CLK_FLAG_HSIRDY) == FALSE); 
   
       CLK_ClockSwitchCmd(ENABLE); 
-      //CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV8); //un peu lent
-       
       CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1);
-    
       CLK_SYSCLKConfig(CLK_PRESCALER_CPUDIV1); //soit 16Mhz
   
-      //CLK_ClockSwitchConfig(CLK_SWITCHMODE_AUTO, CLK_SOURCE_HSI,  
-      //DISABLE, CLK_CURRENTCLOCKSTATE_ENABLE); 
-  
+ 
       CLK_PeripheralClockConfig(CLK_PERIPHERAL_SPI, ENABLE); 
       CLK_PeripheralClockConfig(CLK_PERIPHERAL_I2C, DISABLE); 
       CLK_PeripheralClockConfig(CLK_PERIPHERAL_ADC, DISABLE); 
@@ -98,7 +92,8 @@ void SPI_setup() {
     */
     //donc init manuelle
     SPI->CR1 = (SPI_FIRSTBIT_MSB | SPI_BAUDRATEPRESCALER_128 | SPI_MODE_MASTER | SPI_CLOCKPOLARITY_LOW | SPI_CLOCKPHASE_1EDGE);
-    SPI->CR2 = (SPI_DATADIRECTION_1LINE_TX | SPI_NSS_HARD);
+    SPI->CR2 = (SPI_DATADIRECTION_2LINES_FULLDUPLEX | SPI_NSS_HARD);
+    
     SPI->ICR=0;
     SPI_Cmd(ENABLE);
     
