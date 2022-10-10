@@ -10,6 +10,9 @@ Plusieurs esclaves peuvent coexister sur un même bus, dans ce cas, la sélectio
 Un bus SPI full-duplex typique nécessite quatre broches d'E/S de base :
 ![Liaison SPI](/06_spi/single_slave.png)
 
+Lorsque le bus est inutilisé, ce qui revient à dire qu’aucun esclave n’est sélectionné, la ligne **MISO** est à l’état haute impédance, ce qui ne permet pas d’en définir l’état logique. On évite cela par l’utilisation d’une résistance de polarisation, de 47 kOhms.
+
+
 ## Configuration 
 
 Les GPIO doivent être configurés en tant qu'E/S rapides
@@ -61,17 +64,31 @@ void spi_write(unsigned char address, unsigned char value) {
 ```
 
 
-## Chronogrammes Obtenus
+## Chronogrammes 
 
-Voici les chronogrammes obtenus pour différentes configurations.
-SPI_CLOCKPOLARITY_LOW   SPI_CLOCKPHASE_1EDGE
+Il existe donc **4 modes de transmission** différents (voir tableau ci-dessous). Pour une transmission correcte il faut que ces paramètres soient réglés de la même manière pour tous les composants reliés au bus.
+|Mode SPI|CPOL|CPHA|
+|--|--|--|--|
+| **0**  |0  |0 |
+| **1**  |0  |1 |
+| **2**  |1  |0 |
+| **3**  |1  |1 |
+
+ - **CPOL** détermine si au repos l’horloge est au niveau BAS (CPOL=0) ou HAUT (CPOL=1)
+ - **CPHA** détermine à quel front de l’horloge les données sont transmises. CPHA=0 les données sont valides au **premier front** d’horloge, CPHA=1 elles sont valides au **deuxième front**.
+ 
+ Par défaut, le mode le plus courant est appelé mode 0, c’est-à-dire celui ou CPOL et CPHA sont tous les deux nuls.
+
+Voici les chronogrammes obtenus pour les différents modes.
+**Mode 0** SPI_CLOCKPOLARITY_LOW   SPI_CLOCKPHASE_1EDGE
+
 ![Liaison SPI](/06_spi/CLK_LOW_1EDGE.png)
 
-SPI_CLOCKPOLARITY_LOW   SPI_CLOCKPHASE_2EDGE
+**Mode 1** SPI_CLOCKPOLARITY_LOW   SPI_CLOCKPHASE_2EDGE
 ![Liaison SPI](/06_spi/CLK_LOW_2EDGE.png)
 
-SPI_CLOCKPOLARITY_HIGH   SPI_CLOCKPHASE_1EDGE
+**Mode 2** SPI_CLOCKPOLARITY_HIGH   SPI_CLOCKPHASE_1EDGE
 ![Liaison SPI](/06_spi/CLK_HIGH_1EDGE.png)
 
-SPI_CLOCKPOLARITY_HIGH   SPI_CLOCKPHASE_2EDGE
+**Mode 3** SPI_CLOCKPOLARITY_HIGH   SPI_CLOCKPHASE_2EDGE
 ![Liaison SPI](/06_spi/CLK_HIGH_2EDGE.png)

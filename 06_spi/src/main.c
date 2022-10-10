@@ -74,23 +74,9 @@ void clock_setup()
 }
 
 void SPI_setup() {
-    
-    // plantage via la SPL
-    
+     
     SPI_DeInit();
-    /**
-    SPI_Init(SPI_FIRSTBIT_MSB,            envoie d'abord MSB
-            SPI_BAUDRATEPRESCALER_64,
-            SPI_MODE_MASTER,              SPI fonctionne en mode master
-            SPI_CLOCKPOLARITY_LOW,
-            SPI_CLOCKPHASE_1EDGE,
-            SPI_DATADIRECTION_1LINE_TX,    // Transmit only in 1 line bi-directional data mode 
-            SPI_NSS_HARD,                  ou SPI_NSS_SOFT
-            0x00);
-    printf("->ok2\n");
-    SPI_Cmd(ENABLE);
-    */
-    //donc init manuelle
+    
     SPI->CR1 = (SPI_FIRSTBIT_MSB | SPI_BAUDRATEPRESCALER_128 | SPI_MODE_MASTER | SPI_CLOCKPOLARITY_LOW | SPI_CLOCKPHASE_1EDGE);
     SPI->CR2 = (SPI_DATADIRECTION_2LINES_FULLDUPLEX | SPI_NSS_HARD);
     
