@@ -65,10 +65,10 @@ void spi_write(unsigned char address, unsigned char value) {
 
 Voici les chronogrammes obtenus pour différentes configurations.
 SPI_CLOCKPOLARITY_LOW   SPI_CLOCKPHASE_1EDGE
-![Liaison SPI](/06_spi/CLK_HIGH_1EDGE.png)
+![Liaison SPI](/06_spi/CLK_LOW_1EDGE.png)
 
 SPI_CLOCKPOLARITY_LOW   SPI_CLOCKPHASE_2EDGE
-![Liaison SPI](/06_spi/CLK_HIGH_2EDGE.png)
+![Liaison SPI](/06_spi/CLK_LOW_2EDGE.png)
 
 SPI_CLOCKPOLARITY_HIGH   SPI_CLOCKPHASE_1EDGE
 ![Liaison SPI](/06_spi/CLK_HIGH_1EDGE.png)
