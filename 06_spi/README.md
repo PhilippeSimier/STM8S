@@ -67,6 +67,7 @@ void spi_write(unsigned char address, unsigned char value) {
 ## Chronogrammes 
 
 Il existe donc **4 modes de transmission** différents (voir tableau ci-dessous). Pour une transmission correcte il faut que ces paramètres soient réglés de la même manière pour tous les composants reliés au bus.
+
 |Mode SPI|CPOL|CPHA|
 |--|--|--|--|
 | **0**  |0  |0 |
