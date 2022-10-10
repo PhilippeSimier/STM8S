@@ -24,8 +24,12 @@ void GPIO_setup()
 }
 ``` 
 **Passons maintenant à la partie configuration SPI.**
+
 Nous configurons le registre CR1 du port SPI pour qu'il envoie en premier le bit de poids fort (MSB), 
-nous  sélectionnons le prescaler d'horloge à 128,  Nous demandons que le SPI agisse comme un maître  et nous avons défini SPI_CLOCKPOLARITY_LOW   SPI_CLOCKPHASE_1EDGE . 
+nous  sélectionnons le prescaler d'horloge à 128.
+
+Nous demandons que le SPI agisse comme un maître  et nous avons défini SPI_CLOCKPOLARITY_LOW   SPI_CLOCKPHASE_1EDGE. 
+
 ```c
 SPI->CR1 = (SPI_FIRSTBIT_MSB | SPI_BAUDRATEPRESCALER_128 | SPI_MODE_MASTER | SPI_CLOCKPOLARITY_LOW | SPI_CLOCKPHASE_1EDGE);
 ```
@@ -58,6 +62,7 @@ void spi_write(unsigned char address, unsigned char value) {
 
 
 ## Chronogrammes Obtenus
+
 Voici les chronogrammes obtenus pour différentes configurations.
 SPI_CLOCKPOLARITY_LOW   SPI_CLOCKPHASE_1EDGE
 ![Liaison SPI](/06_spi/CLK_HIGH_1EDGE.png)
