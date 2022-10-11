@@ -15,8 +15,9 @@ void main(void) {
 
     uint16_t i = 0;
 
-    uint8_t data[10] = {0x81, 0x83, 0x87, 0x8f, 0x9f, 0xbf, 0xef, 0x81, 0x83, 0x87};
-
+    uint8_t data_tx[10] = {0x81, 0x83, 0x87, 0x8f, 0x9f, 0xbf, 0xef, 0x81, 0x83, 0x87};
+    uint8_t data_rx[10];
+    
     clock_setup();
     GPIO_setup();
 
@@ -29,7 +30,7 @@ void main(void) {
         //test du spi
         SPI_write(0xa0, 0x36);
         delay_ms(10);
-        SPI_send(data, 10);
+        SPI_transfer(data_tx, data_rx, 10);
         printf("\r\n send %d\r\n", i++);
     }
 }
