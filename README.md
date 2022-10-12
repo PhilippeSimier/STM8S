@@ -10,7 +10,7 @@ Cette carte est compatible au niveau des broches avec l'Arduino nano. **Attentio
 
 Le microcontrôleur possède un ensemble complet de minuteries, interfaces (UART, SPI, I²C), ADC 10 bits, système de contrôle d'horloge interne et externe, chiens de garde, unité de réveil automatique, 64KB de mémoire FLASH et 6KB de mémoire RAM. 
 
-![brochage NUCLEO-8S207K8](/brochage_NUCLEO-8S207K8.png)
+![brochage NUCLEO-8S207K8](/implantation_NUCLEO_phi.png)
 
 Côté gauche
 |Pin name| STM8 pin | Function|
