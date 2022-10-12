@@ -1,7 +1,13 @@
-/*
- * Test du bus  SPI
+/* 
+ * File:   spi.h
+ * Author: Anthony & philippe Lycée Touchard Washington Le Mans
+ * @brief  * This library allows you to communicate with SPI devices
  * 
+ * To test the library spi
+ *  * 
+ * Created on 11 octobre 2022, 10:43
  */
+
 #include <stm8s_conf.h>
 #include <Serial.h>
 #include <spi.h>
@@ -10,6 +16,7 @@
 
 void GPIO_setup();
 void clock_setup();
+void printBuffer(uint8_t *data, uint16_t len);
 
 void main(void) {
 
@@ -22,16 +29,18 @@ void main(void) {
     GPIO_setup();
 
     serial_setup(115200);
+    delay_ms(10);
 
     printf("\r\n Programme test SPI\r\n");
     SPI_setup();
 
     while (1) {
-        //test du spi
-        SPI_write(0xa0, 0x36);
+        
+        //SPI_write(0xa0, 0x36);
         delay_ms(10);
         SPI_transfer(data_tx, data_rx, 10);
         printf("\r\n send %d\r\n", i++);
+        printBuffer(data_rx, 10);
     }
 }
 
@@ -55,6 +64,14 @@ void clock_setup() {
     CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1);
     CLK_SYSCLKConfig(CLK_PRESCALER_CPUDIV1); //soit 16Mhz
 
+}
+
+void printBuffer(uint8_t *data, uint16_t len){
+    uint8_t i;
+    for (i = 0; i < len; i++){
+        printf("%x ", data[i]);
+    }
+    printf("\r\n");
 }
 
 
