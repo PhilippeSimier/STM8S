@@ -42,9 +42,10 @@ void SPI_write(unsigned char address, unsigned char value) {
  * @retval none
  */
 
-void SPI_send(uint8_t *data, uint16_t len) {
+void SPI_send(void *data, uint16_t len) {
 
     uint16_t tx_len = len;
+    uint8_t *tx_ptr = (uint8_t *) data;
     int i = 0;
 
     while (SPI_GetFlagStatus(SPI_FLAG_BSY)); //attends que le bus soit pret
@@ -52,8 +53,10 @@ void SPI_send(uint8_t *data, uint16_t len) {
 
     while (tx_len > 0) {
         while (!SPI_GetFlagStatus(SPI_FLAG_TXE));
-        SPI_SendData(data[i++]);
+        SPI_SendData(*tx_ptr);
         tx_len--;
+        tx_ptr++;
+
     }
 
     while (SPI_GetFlagStatus(SPI_FLAG_BSY)); //attends que le bus soit libéré
@@ -66,21 +69,32 @@ void SPI_send(uint8_t *data, uint16_t len) {
  * @param data
  * @param len
  */
-void SPI_transfer(uint8_t *data_tx, uint8_t *data_rx, uint16_t len) {
+void SPI_transfer(void *data_tx, void *data_rx, uint16_t len) {
 
     uint16_t tx_len = len;
+    uint8_t *tx_ptr = (uint8_t *) data_tx;
+    uint8_t *rx_ptr = (uint8_t *) data_rx;
     int i = 0;
+
+    while (SPI_GetFlagStatus(SPI_FLAG_BSY)); //attends que le bus soit pret
+    GPIO_WriteLow(CS_port, CS_pin); //chip select
 
     while (tx_len > 0) {
         while (!SPI_GetFlagStatus(SPI_FLAG_TXE));
-        SPI_SendData(data_tx[i]);
+        SPI_SendData(*tx_ptr);
 
         while (!SPI_GetFlagStatus(SPI_FLAG_RXNE));
-        data_rx[i] = SPI_ReceiveData();
+        *rx_ptr = SPI_ReceiveData();
 
-        i++;
+        tx_ptr++;
+        rx_ptr++;
         tx_len--;
     }
 
+    while (SPI_GetFlagStatus(SPI_FLAG_BSY)); //attends que le bus soit libéré
+    GPIO_WriteHigh(CS_port, CS_pin); //relache le CS
+
 }
+
+
 

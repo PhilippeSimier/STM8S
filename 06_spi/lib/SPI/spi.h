@@ -20,8 +20,9 @@
 
 void SPI_setup();
 void SPI_write(unsigned char address, unsigned char value);
-void SPI_send(uint8_t *data, uint16_t len);
-void SPI_transfer(uint8_t *data_tx, uint8_t *data_rx, uint16_t len);
+void SPI_send(void *data, uint16_t len);
+void SPI_transfer(void *data_tx, void *data_rx, uint16_t len);
+
 
 #endif /* SPI_H */
 
