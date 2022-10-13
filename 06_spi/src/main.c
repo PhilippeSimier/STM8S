@@ -23,8 +23,8 @@ void main(void) {
 
     uint16_t i = 0;
 
-    char messageTX[100] = "TSM8S";
-    char messageRX[100];
+    char* messageTX = "Test";  // In flash program memory
+    char messageRX[100];       // In Ram memory
 
     clock_setup();
     GPIO_setup();
@@ -33,7 +33,6 @@ void main(void) {
     delay_ms(10);
 
     printf("\r\n Programme test SPI\r\n");
-    printf("len : %d", strlen(messageTX));
     SPI_setup();
 
     while (1) {
@@ -41,6 +40,7 @@ void main(void) {
         delay_ms(5);
         SPI_transfer(messageTX, messageRX, strlen(messageTX) + 1);
         printf("\r\n send n° %d\r\n", i++);
+       
         printBuffer(messageRX, strlen(messageRX) + 1);
         
     }
@@ -95,13 +95,21 @@ void printBuffer(void *data, uint16_t len) {
 
     printf("\r\n");
 }
-
+/**
+ * Affiche l'adresse du pointeur
+ * et la zone mémoire utilisée
+ * @param ptr
+ */
 void printAddress(void *ptr){
     
     uint8_t *_ptr = (uint8_t*) ptr;
     
-    if (_ptr < 0x17ff){
-        printf("In RAM : ", _ptr);
+    if (_ptr >=  0x8000 && _ptr < 0xFFFF ){
+        printf("In Flash programm : ");
+    }
+    
+    if (_ptr <= 0x17ff){
+        printf("In RAM : ");
     }
     printf(" 0x%06X\r\n", _ptr);
 }
