@@ -100,8 +100,9 @@ void assert_failed(uint8_t* file, uint32_t line) {
  * @return Pointer to string containing buffer read from UART.
  */
 char* gets(char *buf, uint32_t len) {
+
     unsigned char temp;
-    unsigned char i;
+    uint32_t i;
     unsigned char done;
 
     done = FALSE;
@@ -110,35 +111,32 @@ char* gets(char *buf, uint32_t len) {
     while (done == FALSE) {
         temp = getchar();
 
-        if (temp == '\b') {
-            if (i != 0) // backspace if possible
-            {
-                i = i - 1;
-                putchar('\b');
+        if (temp == '\b' || temp == 0x7f) {
+            if (i > 0) {  // backspace if possible            
+                i--;
+                putchar(temp);
             }
-        } else
-            if (temp == '\r') // handle newline
-        {
-            buf[i] = '\0'; // add null terminator to string
-            done = TRUE;
-        } else
-            if (temp == '\0') // handle EOF
-        {
-            buf[i] = '\0'; // add null terminator to string
-        } else // handle new character
-        {
-            buf[i] = temp;
-            putchar(temp); // echo character
-            i = i + 1;
-            if (i == (len - 1)) {
-                buf[i] = '\0';
+        } else {
+            if (temp == '\r') { // handle newline
+                buf[i] = '\0';  // add null terminator to string
                 done = TRUE;
+            }
+            else {
+                if (temp == '\0') { // handle EOF            
+                    buf[i] = '\0';  // add null terminator to string
+                } else {            // handle new character
+                    buf[i] = temp;
+                    putchar(temp);  // echo character
+                    i++;
+                    if (i == (len - 1)) {
+                        buf[i] = '\0';
+                        done = TRUE;
+                    }
+                }
             }
         }
     }
-
     return buf;
-
 }
 
 /**
@@ -146,15 +144,15 @@ char* gets(char *buf, uint32_t len) {
  * et la zone mémoire utilisée
  * @param ptr
  */
-void printAddress(void *ptr){
-    
+void printAddress(void *ptr) {
+
     uint8_t *_ptr = (uint8_t*) ptr;
-    
-    if (_ptr >=  0x8000 && _ptr < 0xFFFF ){
+
+    if (_ptr >= 0x8000 && _ptr < 0xFFFF) {
         printf("In Flash programm : ");
     }
-    
-    if (_ptr <= 0x17ff){
+
+    if (_ptr <= 0x17ff) {
         printf("In RAM : ");
     }
     printf(" 0x%06X\r\n", _ptr);
@@ -166,14 +164,14 @@ void printAddress(void *ptr){
  * @param len la taille en octets de la zone mémoire 
  */
 void hex_dump(void *data, int len) {
-    
+
     uint8_t *p = (uint8_t*) data;
     int n, i, offset;
 
     offset = 0;
     while (len > 0) {
         n = len < 16 ? len : 16;
-        printf("  %06x: ", p+offset);
+        printf("  %06x: ", p + offset);
         for (i = 0; i < n; i++) {
             printf(" %02x", p[i]);
         }
@@ -194,6 +192,6 @@ void hex_dump(void *data, int len) {
 /**
  * @brief efface l'écran
  */
-void effacer(){
+void effacer() {
     printf("\x1b[H\x1b[2J");
 }
