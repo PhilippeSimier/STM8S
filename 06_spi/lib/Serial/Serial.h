@@ -10,10 +10,15 @@
 
 #include <stm8s_conf.h>
 #include "stdio.h"
+#include <ctype.h>
 
 void serial_setup   (uint32_t baudrate);
 int  putchar (int c);
 int  getchar (void);
+
+void printAddress(void *ptr);
+void hex_dump(void *data, int len);
+void effacer();
 
 
 void delay_ms   (uint32_t nb);

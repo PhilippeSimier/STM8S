@@ -13,18 +13,19 @@
 #include <spi.h>
 #include <stdbool.h>
 #include <string.h>
+#include <ctype.h>
+
 
 void GPIO_setup();
 void clock_setup();
-void printBuffer(void *data, uint16_t len);
-void printAddress(void *ptr);
+
 
 void main(void) {
 
     uint16_t i = 0;
 
-    char* messageTX = "Test";  // In flash program memory
-    char messageRX[100];       // In Ram memory
+    char* messageTX = "Touchard section SNIR Test programme Bus SPI"; // In flash program memory
+    char messageRX[100]; // In Ram memory
 
     clock_setup();
     GPIO_setup();
@@ -37,12 +38,13 @@ void main(void) {
 
     while (1) {
 
-        delay_ms(5);
+        delay_ms(50);
         SPI_transfer(messageTX, messageRX, strlen(messageTX) + 1);
-        printf("\r\n send n° %d\r\n", i++);
-       
-        printBuffer(messageRX, strlen(messageRX) + 1);
         
+        effacer();
+        printf("\r\nSend n° %d\r\n", i++); 
+        hex_dump(messageRX, strlen(messageRX) + 1);
+
     }
 }
 
@@ -68,51 +70,10 @@ void clock_setup() {
 
 }
 
-void printBuffer(void *data, uint16_t len) {
 
-    uint8_t i;
-    uint8_t *buffer = (uint8_t*) data;
-    
-    
-    
-    printAddress(data);
 
-    for (i = 0; i < len; i++) {
-        if (buffer[i] < 16) {
-            printf("0%x ", buffer[i]);
-        } else {
-            printf("%x ", buffer[i]);
-        }
-        if (!((i+1) % 16)){
-                printf("\r\n");
-            }
 
-        }
-    printf("\r\n");
-    for (i = 0; i < len; i++) {
-        printf("%c", buffer[i]);
-    }
 
-    printf("\r\n");
-}
-/**
- * Affiche l'adresse du pointeur
- * et la zone mémoire utilisée
- * @param ptr
- */
-void printAddress(void *ptr){
-    
-    uint8_t *_ptr = (uint8_t*) ptr;
-    
-    if (_ptr >=  0x8000 && _ptr < 0xFFFF ){
-        printf("In Flash programm : ");
-    }
-    
-    if (_ptr <= 0x17ff){
-        printf("In RAM : ");
-    }
-    printf(" 0x%06X\r\n", _ptr);
-}
 
 
 

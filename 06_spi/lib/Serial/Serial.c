@@ -93,3 +93,55 @@ void assert_failed(uint8_t* file, uint32_t line) {
 }
 #endif
 
+/**
+ * Affiche l'adresse du pointeur
+ * et la zone mémoire utilisée
+ * @param ptr
+ */
+void printAddress(void *ptr){
+    
+    uint8_t *_ptr = (uint8_t*) ptr;
+    
+    if (_ptr >=  0x8000 && _ptr < 0xFFFF ){
+        printf("In Flash programm : ");
+    }
+    
+    if (_ptr <= 0x17ff){
+        printf("In RAM : ");
+    }
+    printf(" 0x%06X\r\n", _ptr);
+}
+/**
+ * 
+ * @param data un pointeur générique sur le premier octet à afficher
+ * @param len la taille en octets de la zone mémoire 
+ */
+void hex_dump(void *data, int len) {
+    
+    uint8_t *p = (uint8_t*) data;
+    int n, i, offset;
+
+    offset = 0;
+    while (len > 0) {
+        n = len < 16 ? len : 16;
+        printf("  %03x: ", offset);
+        for (i = 0; i < n; i++) {
+            printf(" %02x", p[i]);
+        }
+        for (i = n; i < 16; i++) {
+            printf("   ");
+        }
+        printf("  ");
+        for (i = 0; i < n; i++) {
+            printf("%c", isprint(p[i]) ? p[i] : '.');
+        }
+        printf("\n\r");
+        p += 16;
+        offset += 16;
+        len -= 16;
+    }
+}
+
+void effacer(){
+    printf("\x1b[H\x1b[2J");
+}
