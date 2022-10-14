@@ -1,10 +1,11 @@
 /* 
- * File:   spi.h
- * Author: Anthony & philippe Lycée Touchard Washington Le Mans
- * @brief  * This library allows you to communicate with SPI devices
+ * File:   main.h
+ * Author: Anthony Le CREN & philippe SIMIER 
+ *         Lycée Touchard Washington Le Mans
+ * @brief  spi library allows you to communicate with SPI devices
  * 
- * To test the library spi
- *  * 
+ * program to test the library spi
+ *  
  * Created on 11 octobre 2022, 10:43
  */
 
@@ -24,8 +25,8 @@ void main(void) {
 
     uint16_t i = 0;
 
-    char* messageTX = "Touchard Section SNIR Test programme Bus SPI"; // In flash program memory
-    char messageRX[100]; // In Ram memory
+    const char* messageTX = "Touchard Section SNIR Programme Test Bus SPI"; // Stored in flash program memory
+    char messageRX[100]; // Stored in Ram memory
 
     clock_setup();
     GPIO_setup();
@@ -42,9 +43,11 @@ void main(void) {
         SPI_transfer(messageTX, messageRX, strlen(messageTX) + 1);
         
         effacer();
+        printf("\r\nSend n° %u\r\n", i++); 
+        
         printf("Buffer TX\r\n");
         hex_dump(messageTX, strlen(messageTX) + 1);
-        printf("\r\nSend n° %d\r\n", i++); 
+        
         printf("Buffer RX\r\n");
         hex_dump(messageRX, strlen(messageRX) + 1);
 

@@ -8,6 +8,7 @@
 
 #include <stm8s_conf.h>
 #include <Serial.h>
+#include <string.h>
 
 
 
@@ -25,27 +26,30 @@ void main(void) {
     printf("\r\n");
 
     
-    int8_t i = 126;  // int sur 8 bits
+    int8_t i = 0;  // int sur 8 bits
     char buffer[100];
-
+    char ans;
+    
     while (1) {
+        
+        effacer();
         i++;
-        printf("%d\r\n", i);
-        printf("Entrer un caractère!\r\n");
-
+        printf("loop %d\r\n", i);
+       
         delay_ms(2);
 
-        /* you may also use blocking getchar() to get input */
-        char ans = getchar();
+
         printf("%c", ans);
         printf(" Code Ascii 0x%X\r\n", ans); 
         
         printf("Entrer un message!\r\n");
         gets(buffer,100);
         printf("\r\n%s\r\n", buffer);
-        
-        
-        
+        hex_dump(buffer, strlen(buffer)+1);
+        printf("Entrer un caractère!\r\n");
+        /* you may also use blocking getchar() to get input */
+        ans = getchar();
+       
     }
 }
 
