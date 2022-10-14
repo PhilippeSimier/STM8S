@@ -24,7 +24,7 @@ void main(void) {
 
     uint16_t i = 0;
 
-    char* messageTX = "Touchard section SNIR Test programme Bus SPI"; // In flash program memory
+    char* messageTX = "Touchard Section SNIR Test programme Bus SPI"; // In flash program memory
     char messageRX[100]; // In Ram memory
 
     clock_setup();
@@ -38,11 +38,14 @@ void main(void) {
 
     while (1) {
 
-        delay_ms(50);
+        delay_ms(250);
         SPI_transfer(messageTX, messageRX, strlen(messageTX) + 1);
         
         effacer();
+        printf("Buffer TX\r\n");
+        hex_dump(messageTX, strlen(messageTX) + 1);
         printf("\r\nSend n° %d\r\n", i++); 
+        printf("Buffer RX\r\n");
         hex_dump(messageRX, strlen(messageRX) + 1);
 
     }

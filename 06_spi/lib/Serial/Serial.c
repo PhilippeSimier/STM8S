@@ -124,7 +124,7 @@ void hex_dump(void *data, int len) {
     offset = 0;
     while (len > 0) {
         n = len < 16 ? len : 16;
-        printf("  %03x: ", offset);
+        printf("  %06x: ", p+offset);
         for (i = 0; i < n; i++) {
             printf(" %02x", p[i]);
         }
